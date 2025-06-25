@@ -357,20 +357,48 @@ const AboutMe = () => {
 
 // --- Contact Section ---
 const Contact = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-    const [formStatus, setFormStatus] = useState({ submitted: false, message: '' });
-
-    const handleChange = (e) => {
-        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    };
+    const [state, setState] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
-        setFormStatus({ submitted: true, message: "Thank you for your message! I'll be in touch soon." });
-        setFormData({ name: '', email: '', message: '' });
-        setTimeout(() => setFormStatus({ submitted: false, message: '' }), 5000);
+        const form = e.target;
+        const data = new FormData(form);
+        setState({ submitting: true });
+
+        fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                setState({ succeeded: true });
+                form.reset();
+            } else {
+                response.json().then(data => {
+                     if (Object.hasOwn(data, 'errors')) {
+                        setState({ errors: data["errors"].map((error) => error["message"]).join(", ") })
+                    } else {
+                        setState({ errors: "Something went wrong!" })
+                    }
+                })
+            }
+        }).catch(error => {
+             setState({ errors: "Something went wrong!" })
+        });
     };
+    
+    if (state?.succeeded) {
+        return (
+            <section id="contact" className="section-padding">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Thank You!</h2>
+                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Your message has been sent. I'll be in touch with you shortly.</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section id="contact" className="section-padding">
@@ -379,32 +407,26 @@ const Contact = () => {
                 <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind or just want to connect? I'd love to hear from you.</p>
 
                 <div className="mt-12">
-                    {formStatus.submitted ? (
-                        <div className="bg-teal-100 border-l-4 border-teal-500 text-teal-800 p-4 text-left rounded-md" role="alert">
-                            <p className="font-bold">Success!</p>
-                            <p>{formStatus.message}</p>
+                    <form onSubmit={handleSubmit} action="https://formspree.io/f/xnnvobbj" method="POST" className="space-y-6 text-left">
+                        <div>
+                            <label htmlFor="name" className="sr-only">Full Name</label>
+                            <input id="name" type="text" name="name" required placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"/>
                         </div>
-                    ) : (
-                        <form onSubmit={handleSubmit} className="space-y-6 text-left">
-                            <div>
-                                <label htmlFor="name" className="sr-only">Full Name</label>
-                                <input type="text" name="name" id="name" required value={formData.name} onChange={handleChange} placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"/>
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="sr-only">Email Address</label>
-                                <input type="email" name="email" id="email" required value={formData.email} onChange={handleChange} placeholder="Email Address" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"/>
-                            </div>
-                            <div>
-                                <label htmlFor="message" className="sr-only">Message</label>
-                                <textarea name="message" id="message" rows="4" required value={formData.message} onChange={handleChange} placeholder="Your message..." className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"></textarea>
-                            </div>
-                            <div className="text-center">
-                                <button type="submit" className="text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors transform hover:scale-105">
-                                    Send Message
-                                </button>
-                            </div>
-                        </form>
-                    )}
+                        <div>
+                            <label htmlFor="email" className="sr-only">Email Address</label>
+                            <input id="email" type="email" name="email" required placeholder="Email Address" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"/>
+                        </div>
+                        <div>
+                            <label htmlFor="message" className="sr-only">Message</label>
+                            <textarea id="message" name="message" rows="4" required placeholder="Your message..." className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm"></textarea>
+                        </div>
+                        <div className="text-center">
+                            <button type="submit" disabled={state?.submitting} className="text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors transform hover:scale-105 disabled:bg-slate-400 disabled:cursor-not-allowed">
+                                {state?.submitting ? 'Sending...' : 'Send Message'}
+                            </button>
+                        </div>
+                         {state?.errors && <p className="text-red-600 text-sm mt-2 text-center">{state.errors}</p>}
+                    </form>
                 </div>
             </div>
         </section>
