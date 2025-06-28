@@ -319,55 +319,71 @@ const InsightModal = ({ insight, onClose }) => {
 // --- Featured Work Carousel ---
 const CarouselCard = ({ project }) => {
     const renderContent = () => {
-        const commonIframeClasses = "w-full h-full";
-        const containerClasses = "relative w-full bg-slate-800 aspect-video md:aspect-auto md:h-full";
+        const commonIframeClasses = "w-full h-full bg-white";
+        const containerClasses = "relative w-full h-full bg-slate-900 flex items-center justify-center overflow-hidden";
 
-        if (project.type === '3d') {
-            return (
-                <div className={containerClasses}>
-                    <iframe title={project.title} frameBorder="0" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" src={project.embedUrl} className={commonIframeClasses}></iframe>
-                </div>
-            );
-        }
         if (project.type === 'mobile') {
              return (
-                 <div className={`${containerClasses} p-4 sm:p-6 flex items-center justify-center`}>
-                     <iframe className={`${commonIframeClasses} rounded-lg border border-slate-700`} src={project.embedUrl} title={project.title}></iframe>
-                </div>
+                 <div className={`${containerClasses} p-6 sm:p-8`}>
+                    <div className="relative mx-auto border-gray-800 bg-gray-800 border-[10px] sm:border-[14px] rounded-[2rem] sm:rounded-[2.5rem] h-full max-h-[550px] aspect-[9/19.5] shadow-2xl">
+                        <div className="w-[100px] sm:w-[148px] h-[14px] sm:h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
+                        <div className="h-[32px] sm:h-[46px] w-[2px] sm:w-[3px] bg-gray-800 absolute -start-[12px] sm:-start-[17px] top-[90px] sm:top-[124px] rounded-s-lg"></div>
+                        <div className="h-[32px] sm:h-[46px] w-[2px] sm:w-[3px] bg-gray-800 absolute -start-[12px] sm:-start-[17px] top-[140px] sm:top-[178px] rounded-s-lg"></div>
+                        <div className="h-[48px] sm:h-[64px] w-[2px] sm:w-[3px] bg-gray-800 absolute -end-[12px] sm:-end-[17px] top-[110px] sm:top-[142px] rounded-e-lg"></div>
+                        <div className="rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                           <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                        </div>
+                    </div>
+                 </div>
              );
         }
+
+        // Default for 'web' and '3d'
         return (
-            <div className={`${containerClasses} md:p-4`}>
-                 <iframe className={`${commonIframeClasses} md:rounded-lg`} src={project.embedUrl} title={project.title}></iframe>
+            <div className={containerClasses}>
+                 <iframe 
+                    title={project.title} 
+                    frameBorder="0" 
+                    allowFullScreen 
+                    mozallowfullscreen="true" 
+                    webkitallowfullscreen="true" 
+                    src={project.embedUrl} 
+                    className={commonIframeClasses}
+                 ></iframe>
             </div>
         );
     };
 
     const descriptionPanel = (
-         <div className="bg-white p-6 md:p-8 flex flex-col justify-center">
+         <div className="bg-white p-6 md:p-8 flex flex-col justify-between h-full">
             <div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
                 <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
                 <p className="mt-4 text-slate-600">{project.description}</p>
-                <div className="mt-6 pt-6 border-t border-slate-200">
-                    <h4 className="font-semibold text-slate-800">Key Technologies</h4>
-                    <div className="flex flex-wrap gap-2 mt-3">
-                        {project.techStack.map(tech => (
-                            <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
-                        ))}
-                    </div>
+            </div>
+            <div className="mt-6 pt-6 border-t border-slate-200">
+                <h4 className="font-semibold text-slate-800">Key Technologies</h4>
+                <div className="flex flex-wrap gap-2 mt-3">
+                    {project.techStack.map(tech => (
+                        <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
+                    ))}
                 </div>
             </div>
         </div>
     );
     
     return (
-        <div className="flex flex-col md:flex-row md:h-full">
-            <div className="md:w-3/5 lg:w-2/3">{renderContent()}</div>
-            <div className="md:w-2/5 lg:w-1/3">{descriptionPanel}</div>
+        <div className="flex flex-col md:grid md:grid-cols-10 h-full">
+            <div className="md:col-span-6 lg:col-span-7 aspect-video md:aspect-auto">
+                {renderContent()}
+            </div>
+            <div className="md:col-span-4 lg:col-span-3 flex flex-col">
+                {descriptionPanel}
+            </div>
         </div>
     );
 };
+
 
 const FeaturedWork = () => {
     const projects = [
@@ -390,13 +406,13 @@ const FeaturedWork = () => {
 
     return (
         <section id="work" className="section-padding bg-white">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className="grid">
+                <div className="grid md:min-h-[600px]">
                     {projects.map((project, index) => (
                         <div 
                             key={project.title} 
@@ -417,6 +433,7 @@ const FeaturedWork = () => {
         </section>
     );
 };
+
 
 // --- The Framework Section ---
 const FrameworkStep = ({ step, index }) => {
@@ -875,7 +892,7 @@ const Contact = () => {
                 })
             }
         }).catch(error => {
-             setState({ errors: "Something went wrong!" })
+             setState({ errors: "Something wrong!" })
         });
     };
     
