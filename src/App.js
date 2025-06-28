@@ -71,15 +71,16 @@ const GlobalStyles = () => (
             }
             body { font-family: 'Inter', sans-serif; background-color: var(--c-background); color: var(--c-text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
             .glass-header { background-color: rgba(248, 250, 252, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
-            .section-padding { padding-top: 6rem; padding-bottom: 6rem; }
+            .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
             @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             .carousel-slide { transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; position: absolute; inset: 0; }
             .carousel-slide.inactive { opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none; }
             .carousel-slide.active { opacity: 1; transform: scale(1) translateY(0); }
-            .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
+            .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; padding: 1rem;}
             .modal-overlay.visible { opacity: 1; pointer-events: auto; }
-            .modal-content { background: white; border-radius: 1rem; padding: 2rem; width: 100%; transform: scale(0.95); transition: transform 0.3s ease-in-out; max-height: 90vh; overflow-y: auto;}
+            .modal-content { background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; transform: scale(0.95); transition: transform 0.3s ease-in-out; max-height: 90vh; overflow-y: auto;}
+            @media (min-width: 640px) { .modal-content { padding: 2rem; } }
             .modal-overlay.visible .modal-content { transform: scale(1); }
             
             .framework-item {
@@ -136,12 +137,17 @@ const GlobalStyles = () => (
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1);
             }
             .coverflow-item {
-                flex: 0 0 75%; /* Each item takes up 75% of the container width */
+                flex: 0 0 90%; /* Adjust for mobile */
                 min-width: 0;
                 position: relative;
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.6s ease;
                 opacity: 0.4;
                 transform: scale(0.85);
+            }
+            @media (min-width: 768px) {
+                .coverflow-item {
+                    flex: 0 0 75%; /* Original width for larger screens */
+                }
             }
             .coverflow-item.active {
                 opacity: 1;
@@ -152,9 +158,9 @@ const GlobalStyles = () => (
             }
             .coverflow-content {
                 position: absolute;
-                bottom: 2rem;
-                left: 2rem;
-                right: 2rem;
+                bottom: 1.5rem;
+                left: 1.5rem;
+                right: 1.5rem;
                 color: white;
                 opacity: 0;
                 transition: opacity 0.6s ease;
@@ -182,6 +188,8 @@ const SyncIcon = ({className}) => <svg className={className} xmlns="http://www.w
 const XIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 const DownloadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
 const LogOutIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
+const MenuIcon = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
+
 
 // --- Auth & About Modals ---
 const AuthModal = ({ isOpen, onClose }) => {
@@ -212,7 +220,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
     return (
         <div className={`modal-overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}>
-            <div className="modal-content max-w-sm" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold">{isLoginView ? 'Sign In' : 'Create Account'}</h2>
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
@@ -240,28 +248,28 @@ const AboutModal = ({ isOpen, onClose }) => {
 
     return (
         <div className={`modal-overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}>
-            <div className="modal-content max-w-4xl" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-end mb-2">
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100" aria-label="Close about modal"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-left">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
                     <div className="md:col-span-1 flex justify-center">
-                        <div className="w-48 h-48 bg-white rounded-full shadow-xl flex items-center justify-center border-4 border-slate-100">
-                            <LogoIcon className="h-24 w-24 text-slate-900" />
+                        <div className="w-40 h-40 md:w-48 md:h-48 bg-white rounded-full shadow-xl flex items-center justify-center border-4 border-slate-100">
+                            <LogoIcon className="h-20 w-20 md:h-24 md:w-24 text-slate-900" />
                         </div>
                     </div>
                     <div className="md:col-span-2">
-                        <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
+                        <h2 className="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
                             Driven by a passion for solving complex problems.
                         </h2>
-                        <p className="mt-6 text-lg text-slate-600">
+                        <p className="mt-6 text-base md:text-lg text-slate-600">
                             As a senior software engineer, I thrive on architecting and building robust, scalable applications that bridge the gap between user needs and business goals. My expertise spans the full stack, with a deep interest in leveraging AI and modern frameworks to create impactful, intuitive digital products.
                         </p>
                         <div className="mt-8">
                             <a 
                                 href="/Robert_McQva_Resume.pdf" 
                                 download 
-                                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-lg transition-colors ${currentUser ? 'bg-slate-900 text-white hover:bg-slate-700' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
+                                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-base md:text-lg transition-colors ${currentUser ? 'bg-slate-900 text-white hover:bg-slate-700' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
                                 onClick={(e) => !currentUser && e.preventDefault()}
                                 title={!currentUser ? "Sign in to download" : "Download Resume"}
                             >
@@ -281,15 +289,15 @@ const InsightModal = ({ insight, onClose }) => {
 
     return (
         <div className={`modal-overlay visible`} onClick={onClose}>
-            <div className="modal-content max-w-3xl" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="font-semibold text-slate-600">{insight.category}</p>
-                        <h2 className="text-3xl font-bold mt-1">{insight.title}</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold mt-1">{insight.title}</h2>
                     </div>
-                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100 -mt-2 -mr-2"><XIcon className="w-6 h-6 text-slate-500"/></button>
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100 -mt-2 -mr-2 flex-shrink-0"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
-                <div className="prose lg:prose-lg max-w-none text-slate-700 leading-relaxed">
+                <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed">
                    {insight.content}
                 </div>
             </div>
@@ -299,69 +307,31 @@ const InsightModal = ({ insight, onClose }) => {
 
 // --- Featured Work Carousel ---
 const CarouselCard = ({ project }) => {
-    const getLayoutClasses = () => {
-        switch (project.type) {
-            case 'web':
-            case '3d':
-                return { preview: 'lg:col-span-4', description: 'lg:col-span-1' };
-            case 'mobile':
-                return { preview: 'lg:col-span-2', description: 'lg:col-span-3' };
-            default:
-                return { preview: 'lg:col-span-3', description: 'lg:col-span-2' };
-        }
-    };
-    const layout = getLayoutClasses();
-    
     const renderContent = () => {
-        // Special render case for Zenith Analytics to keep its vertical layout but within the grid system
-        if (project.title === "Zenith Analytics") {
-            return (
-                <div className="flex flex-col h-full bg-white">
-                    <div className="flex-grow bg-slate-800 p-4">
-                        <iframe className="w-full h-full rounded-lg" src={project.embedUrl} title={project.title}></iframe>
-                    </div>
-                </div>
-            )
-        }
-        
+        const commonIframeClasses = "w-full h-full";
         if (project.type === '3d') {
-            return <iframe title={project.title} frameBorder="0" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" src={project.embedUrl} className="w-full h-full"></iframe>;
+            return <iframe title={project.title} frameBorder="0" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" src={project.embedUrl} className={commonIframeClasses}></iframe>;
         }
         if (project.type === 'mobile') {
              return (
                  <div className="w-full h-full bg-slate-900 p-4 sm:p-6 flex items-center justify-center">
-                     <iframe className="w-full h-full rounded-lg border border-slate-700" src={project.embedUrl} title={project.title}></iframe>
+                     <iframe className={`${commonIframeClasses} rounded-lg border border-slate-700`} src={project.embedUrl} title={project.title}></iframe>
                 </div>
              );
         }
-        if (project.type === 'web') {
-            return (
-                <div className="w-full h-full bg-slate-800 p-4">
-                     <iframe className="w-full h-full rounded-lg" src={project.embedUrl} title={project.title}></iframe>
-                </div>
-            );
-        }
+        // This covers 'web' and 'zenith'
         return (
-            <div className="w-full h-full flex flex-col p-8 bg-slate-800">
-                <div className="flex-grow space-y-4 overflow-hidden">
-                     <div className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-9 h-9 rounded-full bg-slate-500 flex items-center justify-center text-white font-bold text-sm">A</span>
-                        <div className="p-3 rounded-lg bg-slate-600 text-white">What is diversification?</div>
-                    </div>
-                     <div className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-sm">RM</span>
-                        <div className="p-3 rounded-lg bg-slate-600 text-white">Think of it like a dinner party - invite guests from different backgrounds so if one is boring, the others keep it lively.</div>
-                    </div>
-                </div>
+            <div className="w-full h-full bg-slate-800 md:p-4">
+                 <iframe className={`${commonIframeClasses} md:rounded-lg`} src={project.embedUrl} title={project.title}></iframe>
             </div>
         );
     };
 
     const descriptionPanel = (
-         <div className={`bg-white p-8 lg:p-12 flex flex-col justify-center ${layout.description}`}>
+         <div className="bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center">
             <div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
-                <h3 className="mt-2 text-3xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                <h3 className="mt-2 text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
                 <p className="mt-4 text-slate-600">{project.description}</p>
                 <div className="mt-6 pt-6 border-t border-slate-200">
                     <h4 className="font-semibold text-slate-800">Key Technologies</h4>
@@ -375,36 +345,10 @@ const CarouselCard = ({ project }) => {
         </div>
     );
     
-    // Original spacious layout for Zenith Analytics
-    if (project.title === "Zenith Analytics") {
-        return (
-            <div className="flex flex-col h-full bg-white">
-                <div className="flex-grow bg-slate-800 p-4">
-                     <iframe className="w-full h-full rounded-lg" src={project.embedUrl} title={project.title}></iframe>
-                </div>
-                <div className="flex-shrink-0 p-8">
-                    <div>
-                        <p className="font-semibold text-slate-600">{project.category}</p>
-                        <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
-                        <p className="mt-3 text-slate-600">{project.description}</p>
-                        <div className="mt-5 pt-5 border-t border-slate-200">
-                            <h4 className="font-semibold text-slate-800">Key Technologies</h4>
-                            <div className="flex flex-wrap gap-2 mt-3">
-                                {project.techStack.map(tech => (
-                                    <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-    
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-5 h-full">
-            <div className={`bg-slate-100 border-r border-slate-200 ${layout.preview}`}>{renderContent()}</div>
-            {descriptionPanel}
+        <div className="flex flex-col h-full">
+            <div className="h-64 md:h-auto md:flex-1 bg-slate-100 border-b md:border-b-0 md:border-r border-slate-200">{renderContent()}</div>
+            <div className="flex-shrink-0">{descriptionPanel}</div>
         </div>
     );
 };
@@ -426,20 +370,17 @@ const FeaturedWork = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
-    const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
-    
-    const activeProject = projects[currentIndex];
-    const isZenithActive = activeProject.title === "Zenith Analytics";
+    const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev - 1));
 
     return (
         <section id="work" className="section-padding bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
-                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
+                <div className="text-center mb-12 md:mb-16">
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className={`relative w-full transition-all duration-700 ease-in-out ${isZenithActive ? 'h-[90vh] max-h-[950px]' : 'h-[75vh] max-h-[720px]'}`}>
+                <div className="relative w-full h-[85vh] md:h-[75vh] max-h-[600px] md:max-h-[720px]">
                     {projects.map((project, index) => (
                         <div key={project.title} className={`carousel-slide ${index === currentIndex ? 'active' : 'inactive'}`}>
                            <div className="w-full h-full rounded-2xl shadow-xl overflow-hidden border border-slate-200">
@@ -471,7 +412,7 @@ const FrameworkStep = ({ step, index }) => {
                     observer.unobserve(entry.target);
                 }
             },
-            { threshold: 0.3 }
+            { threshold: 0.1 } // Trigger a bit earlier
         );
 
         if (currentRef) {
@@ -488,23 +429,21 @@ const FrameworkStep = ({ step, index }) => {
     const isEven = index % 2 === 0;
 
     return (
-        <div ref={itemRef} className={`framework-item group relative flex items-center ${isEven ? '' : 'md:flex-row-reverse'}`}>
-             <div className={`md:w-[calc(50%-2.5rem)] ${isEven ? 'md:ml-auto' : 'md:mr-auto'}`}>
-                 <div className="relative p-8 rounded-2xl framework-card shadow-lg">
+        <div ref={itemRef} className={`framework-item group relative flex items-center md:space-x-8 ${isEven ? '' : 'md:flex-row-reverse md:space-x-reverse'}`}>
+             <div className="w-full md:w-[calc(50%-2.5rem)]">
+                 <div className="relative p-6 md:p-8 rounded-2xl framework-card shadow-lg">
                     <div className="relative z-10">
-                        <div className="w-16 h-16 rounded-full flex items-center justify-center icon-container mb-6">
-                            <step.icon className="w-8 h-8 text-slate-500" />
+                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center icon-container mb-6">
+                            <step.icon className="w-7 h-7 md:w-8 md:h-8 text-slate-500" />
                         </div>
-                        <h3 className="text-2xl font-bold text-slate-900">{step.title}</h3>
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-900">{step.title}</h3>
                         <p className="mt-3 text-slate-600 leading-relaxed">{step.description}</p>
                     </div>
                 </div>
             </div>
-            <div className="hidden md:block w-20 h-full absolute top-0 left-1/2 -translate-x-1/2">
-                <div className="w-full h-full flex items-center justify-center">
-                    <div className="timeline-dot w-10 h-10 rounded-full flex items-center justify-center text-sm">
-                       0{index+1}
-                    </div>
+            <div className="hidden md:flex w-20 h-full absolute top-0 left-1/2 -translate-x-1/2 items-center justify-center">
+                 <div className="timeline-dot w-10 h-10 rounded-full flex items-center justify-center text-sm">
+                   0{index+1}
                 </div>
             </div>
         </div>
@@ -523,14 +462,14 @@ const TheFramework = () => {
     return (
         <section id="framework" className="section-padding bg-slate-50 overflow-hidden">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-20">
-                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
-                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">A disciplined, end-to-end approach to building successful digital products.</p>
+                <div className="text-center mb-12 md:mb-20">
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A disciplined, end-to-end approach to building successful digital products.</p>
                 </div>
 
                 <div className="relative">
-                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-slate-200" aria-hidden="true"></div>
-                    <div className="space-y-24">
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-slate-200 hidden md:block" aria-hidden="true"></div>
+                    <div className="space-y-16 md:space-y-24">
                         {processSteps.map((step, index) => (
                             <FrameworkStep key={index} step={step} index={index} />
                         ))}
@@ -801,34 +740,49 @@ const StreamingCarousel = ({ onReadInsight }) => {
         return stopAutoplay;
     }, []);
 
-    const itemWidthPercentage = 75;
-    const trackOffset = 12.5;
-    const trackTranslateX = -activeIndex * itemWidthPercentage + trackOffset;
+    const itemWidthPercentage = 90; // Mobile first
+    const mdItemWidthPercentage = 75; // Desktop
+    const trackOffset = (100 - itemWidthPercentage) / 2;
+    const mdTrackOffset = (100 - mdItemWidthPercentage) / 2;
+
+    const [trackTranslateX, setTrackTranslateX] = useState(-activeIndex * itemWidthPercentage + trackOffset);
+
+    useEffect(() => {
+        const updateTrackPosition = () => {
+            const isMobile = window.innerWidth < 768;
+            const width = isMobile ? itemWidthPercentage : mdItemWidthPercentage;
+            const offset = isMobile ? trackOffset : mdTrackOffset;
+            setTrackTranslateX(-activeIndex * width + offset);
+        };
+        updateTrackPosition();
+        window.addEventListener('resize', updateTrackPosition);
+        return () => window.removeEventListener('resize', updateTrackPosition);
+    }, [activeIndex, itemWidthPercentage, mdItemWidthPercentage, trackOffset, mdTrackOffset]);
+
 
     return (
         <section id="insights" className="bg-white py-16 sm:py-24" onMouseEnter={stopAutoplay} onMouseLeave={startAutoplay}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Insights</h2>
-                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology, design, and development.</p>
+            <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+                <div className="text-center mb-12 md:mb-16 px-4">
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Insights</h2>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology, design, and development.</p>
                 </div>
-                <div className="coverflow-container h-[60vh]">
+                <div className="coverflow-container h-[55vh] md:h-[60vh]">
                     <div 
                         className="coverflow-track h-full"
-                        style={{ transform: `translateX(${trackTranslateX}%)`, transition: 'transform 0.6s cubic-bezier(0.5, 0, 0.5, 1)' }}
+                        style={{ transform: `translateX(${trackTranslateX}%)` }}
                     >
                         {articles.map((item, index) => {
                              const isActive = index === activeIndex;
                             return (
                                 <div key={item.id} className={`coverflow-item ${isActive ? 'active' : ''}`}>
-                                    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
+                                    <div className="relative w-full h-full rounded-none md:rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
                                         <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover"/>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
                                         <div className="coverflow-content">
-                                            <img src={item.logo.src} alt={`${item.logo.alt} logo`} className="h-8 mb-4" onError={(e) => { e.target.style.display = 'none'; }} />
-                                            <h3 className="text-xl font-semibold">{item.category}</h3>
-                                            <p className="text-5xl font-bold tracking-tight mt-1">{item.title}</p>
-                                            <button onClick={() => onReadInsight(item)} className="mt-6 inline-block bg-white text-black font-semibold px-5 py-2.5 rounded-full text-lg hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
+                                            <h3 className="text-base md:text-xl font-semibold">{item.category}</h3>
+                                            <p className="text-3xl md:text-5xl font-bold tracking-tight mt-1">{item.title}</p>
+                                            <button onClick={() => onReadInsight(item)} className="mt-4 md:mt-6 inline-block bg-white text-black font-semibold px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-lg hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
                                                 Read Insight
                                             </button>
                                         </div>
@@ -857,11 +811,11 @@ const Testimonials = () => {
     return (
         <section className="section-padding bg-white">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
                     Trusted by Colleagues
                 </h2>
                 <div className="mt-10">
-                    <blockquote className="text-2xl lg:text-3xl font-medium text-slate-800 leading-snug">
+                    <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium text-slate-800 leading-snug">
                        “Robert is a rare talent. His ability to bridge complex technical challenges with a deep understanding of user experience is unmatched. He’s not just an engineer; he’s a true product visionary.”
                     </blockquote>
                     <footer className="mt-6">
@@ -910,8 +864,8 @@ const Contact = () => {
         return (
             <section id="contact" className="section-padding">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Thank You!</h2>
-                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Your message has been sent. I'll be in touch with you shortly.</p>
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Thank You!</h2>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Your message has been sent. I'll be in touch with you shortly.</p>
                 </div>
             </section>
         );
@@ -920,8 +874,8 @@ const Contact = () => {
     return (
         <section id="contact" className="section-padding">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Let's build something together.</h2>
-                <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind or just want to connect? I'd love to hear from you.</p>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Let's build something together.</h2>
+                <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind or just want to connect? I'd love to hear from you.</p>
 
                 <div className="mt-12">
                     <form onSubmit={handleSubmit} action="https://formspree.io/f/xnnvobbj" method="POST" className="space-y-6 text-left">
@@ -968,7 +922,7 @@ const ScrollToTopButton = () => {
     return (
         <button
             onClick={scrollToTop}
-            className={`fixed bottom-8 right-8 z-50 p-3 rounded-full bg-slate-900 text-white shadow-lg hover:bg-slate-700 transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            className={`fixed bottom-6 right-6 z-50 p-3 rounded-full bg-slate-900 text-white shadow-lg hover:bg-slate-700 transition-all duration-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
             aria-label="Scroll to top"
         ><ChevronUpIcon className="w-6 h-6" /></button>
     );
@@ -982,7 +936,7 @@ const Footer = () => {
         <footer className="bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-                    <p className="text-sm text-slate-500">&copy; {new Date().getFullYear()} {developerName}. All Rights Reserved.</p>
+                    <p className="text-sm text-slate-500 text-center sm:text-left">&copy; {new Date().getFullYear()} {developerName}. All Rights Reserved.</p>
                      <div className="flex items-center gap-6">
                          {socialLinks.map(link => (
                              <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-900 transition-colors" aria-label={link.name}>
@@ -1003,10 +957,13 @@ function AppContent() {
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
     const [selectedInsight, setSelectedInsight] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
     const handleSignOut = async () => {
         try {
             await signOut(auth);
+            setIsMenuOpen(false); // Close menu on sign out
         } catch (error) {
             console.error("Error signing out:", error);
         }
@@ -1014,9 +971,31 @@ function AppContent() {
     
     const handleNavClick = (e, targetId) => {
         e.preventDefault();
+        setIsMenuOpen(false); // Close mobile menu on link click
         const element = document.getElementById(targetId);
-        element?.scrollIntoView({ behavior: 'smooth' });
+        // Add a small offset to account for the fixed header
+        const headerOffset = 80;
+        const elementPosition = element?.getBoundingClientRect().top ?? 0;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
     };
+
+    const NavLinks = ({ isMobile = false }) => {
+        const commonClass = "text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors";
+        const mobileClass = "block text-lg py-3";
+        return (
+            <>
+                <a href="#work" onClick={(e) => handleNavClick(e, 'work')} className={isMobile ? mobileClass : commonClass}>The Work</a>
+                <a href="#framework" onClick={(e) => handleNavClick(e, 'framework')} className={isMobile ? mobileClass : commonClass}>Framework</a>
+                <a href="#insights" onClick={(e) => handleNavClick(e, 'insights')} className={isMobile ? mobileClass : commonClass}>Insights</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setIsMenuOpen(false); setAboutModalOpen(true); }} className={isMobile ? mobileClass : commonClass}>About</a>
+            </>
+        )
+    }
 
     return (
         <>
@@ -1027,18 +1006,16 @@ function AppContent() {
 
             <header className="fixed top-0 left-0 right-0 z-50 glass-header">
                  <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
-                     <a href="#" aria-label="Home">
+                     <a href="#" onClick={(e) => {e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'})}} aria-label="Home">
                         <LogoIcon className="h-8 w-auto text-slate-900" />
                     </a>
-                    <div className="flex items-center gap-8">
-                         <a href="#work" onClick={(e) => handleNavClick(e, 'work')} className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">The Work</a>
-                         <a href="#framework" onClick={(e) => handleNavClick(e, 'framework')} className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Framework</a>
-                         <a href="#insights" onClick={(e) => handleNavClick(e, 'insights')} className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Insights</a>
-                         <a href="#" onClick={(e) => { e.preventDefault(); setAboutModalOpen(true); }} className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">About</a>
+                    {/* Desktop Nav */}
+                    <div className="hidden md:flex items-center gap-8">
+                         <NavLinks />
                          {currentUser ? (
                              <div className="relative group">
                                 <button className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center">
-                                    {currentUser.email.charAt(0).toUpperCase()}
+                                    {currentUser.email?.charAt(0).toUpperCase() || 'A'}
                                 </button>
                                 <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 hidden group-hover:block">
                                     <button onClick={handleSignOut} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
@@ -1050,17 +1027,43 @@ function AppContent() {
                              <button onClick={() => setAuthModalOpen(true)} className="text-sm font-bold bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
                          )}
                     </div>
+                    {/* Mobile Menu Button */}
+                    <div className="md:hidden">
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label="Toggle menu">
+                            {isMenuOpen ? <XIcon className="w-6 h-6"/> : <MenuIcon className="w-6 h-6"/>}
+                        </button>
+                    </div>
                 </nav>
+                 {/* Mobile Menu Panel */}
+                 <div className={`absolute top-20 left-0 w-full bg-white/95 backdrop-blur-md shadow-lg md:hidden transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="px-8 py-6">
+                        <nav className="flex flex-col items-center space-y-4">
+                            <NavLinks isMobile={true}/>
+                             <div className="pt-6 w-full border-t border-slate-200 text-center">
+                                {currentUser ? (
+                                    <div className="flex flex-col items-center space-y-4">
+                                        <p className="text-slate-600">{currentUser.email}</p>
+                                        <button onClick={handleSignOut} className="w-full text-lg font-bold bg-slate-100 text-slate-800 px-8 py-3 rounded-lg flex items-center justify-center gap-2">
+                                            <LogOutIcon className="w-5 h-5"/> Sign Out
+                                        </button>
+                                    </div>
+                                ) : (
+                                     <button onClick={() => { setIsMenuOpen(false); setAuthModalOpen(true); }} className="w-full text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
+                                )}
+                            </div>
+                        </nav>
+                    </div>
+                 </div>
             </header>
 
             <main>
-                <section className="section-padding relative flex items-center justify-center min-h-[70vh]">
+                <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
                     <div className="absolute inset-0 z-0 opacity-20">
-                        <div className="w-96 h-96 bg-slate-200 rounded-full absolute -top-20 -left-20 filter blur-3xl"></div>
-                        <div className="w-80 h-80 bg-gray-200 rounded-full absolute -bottom-20 -right-20 filter blur-3xl"></div>
+                        <div className="w-72 h-72 md:w-96 md:h-96 bg-slate-200 rounded-full absolute -top-20 -left-20 filter blur-3xl"></div>
+                        <div className="w-64 h-64 md:w-80 md:h-80 bg-gray-200 rounded-full absolute -bottom-20 -right-20 filter blur-3xl"></div>
                     </div>
-                     <div className="relative z-10 text-center">
-                        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+                     <div className="relative z-10 text-center px-4">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
                             Engineering <br />Digital Experiences
                         </h1>
                         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
