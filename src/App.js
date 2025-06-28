@@ -74,9 +74,20 @@ const GlobalStyles = () => (
             .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
             @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-            .carousel-slide { transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; position: absolute; inset: 0; }
-            .carousel-slide.inactive { opacity: 0; transform: scale(0.95) translateY(10px); pointer-events: none; }
-            .carousel-slide.active { opacity: 1; transform: scale(1) translateY(0); }
+            
+            .carousel-slide {
+              grid-column: 1 / -1;
+              grid-row: 1 / -1;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+            }
+            .carousel-slide.active {
+              opacity: 1;
+              visibility: visible;
+              transition-delay: 0s;
+            }
+
             .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; padding: 1rem;}
             .modal-overlay.visible { opacity: 1; pointer-events: auto; }
             .modal-content { background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; transform: scale(0.95); transition: transform 0.3s ease-in-out; max-height: 90vh; overflow-y: auto;}
@@ -309,29 +320,34 @@ const InsightModal = ({ insight, onClose }) => {
 const CarouselCard = ({ project }) => {
     const renderContent = () => {
         const commonIframeClasses = "w-full h-full";
+        const containerClasses = "relative w-full bg-slate-800 aspect-video md:aspect-auto md:h-full";
+
         if (project.type === '3d') {
-            return <iframe title={project.title} frameBorder="0" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" src={project.embedUrl} className={commonIframeClasses}></iframe>;
+            return (
+                <div className={containerClasses}>
+                    <iframe title={project.title} frameBorder="0" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" src={project.embedUrl} className={commonIframeClasses}></iframe>
+                </div>
+            );
         }
         if (project.type === 'mobile') {
              return (
-                 <div className="w-full h-full bg-slate-900 p-4 sm:p-6 flex items-center justify-center">
+                 <div className={`${containerClasses} p-4 sm:p-6 flex items-center justify-center`}>
                      <iframe className={`${commonIframeClasses} rounded-lg border border-slate-700`} src={project.embedUrl} title={project.title}></iframe>
                 </div>
              );
         }
-        // This covers 'web' and 'zenith'
         return (
-            <div className="w-full h-full bg-slate-800 md:p-4">
+            <div className={`${containerClasses} md:p-4`}>
                  <iframe className={`${commonIframeClasses} md:rounded-lg`} src={project.embedUrl} title={project.title}></iframe>
             </div>
         );
     };
 
     const descriptionPanel = (
-         <div className="bg-white p-6 md:p-8 lg:p-12 flex flex-col justify-center">
+         <div className="bg-white p-6 md:p-8 flex flex-col justify-center">
             <div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
-                <h3 className="mt-2 text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
                 <p className="mt-4 text-slate-600">{project.description}</p>
                 <div className="mt-6 pt-6 border-t border-slate-200">
                     <h4 className="font-semibold text-slate-800">Key Technologies</h4>
@@ -346,9 +362,9 @@ const CarouselCard = ({ project }) => {
     );
     
     return (
-        <div className="flex flex-col h-full">
-            <div className="h-64 md:h-auto md:flex-1 bg-slate-100 border-b md:border-b-0 md:border-r border-slate-200">{renderContent()}</div>
-            <div className="flex-shrink-0">{descriptionPanel}</div>
+        <div className="flex flex-col md:flex-row md:h-full">
+            <div className="md:w-3/5 lg:w-2/3">{renderContent()}</div>
+            <div className="md:w-2/5 lg:w-1/3">{descriptionPanel}</div>
         </div>
     );
 };
@@ -370,20 +386,23 @@ const FeaturedWork = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
-    const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev - 1));
+    const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
 
     return (
         <section id="work" className="section-padding bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className="relative w-full h-[85vh] md:h-[75vh] max-h-[600px] md:max-h-[720px]">
+                <div className="grid">
                     {projects.map((project, index) => (
-                        <div key={project.title} className={`carousel-slide ${index === currentIndex ? 'active' : 'inactive'}`}>
-                           <div className="w-full h-full rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+                        <div 
+                            key={project.title} 
+                            className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
+                        >
+                           <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200 h-full">
                               <CarouselCard project={project} />
                            </div>
                         </div>
