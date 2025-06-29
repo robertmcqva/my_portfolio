@@ -72,7 +72,7 @@ const GlobalStyles = () => (
             body { font-family: 'Inter', sans-serif; background-color: var(--c-background); color: var(--c-text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
             .glass-header { background-color: rgba(248, 250, 252, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
             .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
-            @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
+            @media (min-width: 1024px) { .section-padding { padding-top: 6rem; padding-bottom: 6rem; } } /* Adjusted desktop padding */
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             
             .carousel-slide {
@@ -113,9 +113,11 @@ const GlobalStyles = () => (
                 transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
             }
 
-            .framework-card:hover {
-                transform: translateY(-10px) scale(1.03);
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            @media (min-width: 768px) {
+                .framework-card:hover {
+                    transform: translateY(-10px) scale(1.03);
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+                }
             }
             
             .timeline-dot {
@@ -138,7 +140,7 @@ const GlobalStyles = () => (
                 box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
             }
 
-            /* --- NEW STREAMING CAROUSEL STYLES (COVERFLOW) --- */
+            /* --- STREAMING CAROUSEL STYLES (COVERFLOW) --- */
             .coverflow-container {
                 overflow: hidden;
             }
@@ -148,7 +150,7 @@ const GlobalStyles = () => (
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1);
             }
             .coverflow-item {
-                flex: 0 0 90%; /* Adjust for mobile */
+                flex: 0 0 90%;
                 min-width: 0;
                 position: relative;
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.6s ease;
@@ -157,7 +159,7 @@ const GlobalStyles = () => (
             }
             @media (min-width: 768px) {
                 .coverflow-item {
-                    flex: 0 0 75%; /* Original width for larger screens */
+                    flex: 0 0 75%;
                 }
             }
             .coverflow-item.active {
@@ -175,9 +177,30 @@ const GlobalStyles = () => (
                 color: white;
                 opacity: 0;
                 transition: opacity 0.6s ease;
-                pointer-events: none; /* Text shouldn't block image hover */
+                pointer-events: none;
             }
-             /* --- END NEW STYLES --- */
+
+            /* --- MOBILE-SPECIFIC OVERRIDES --- */
+            @media (max-width: 767px) {
+                .featured-work-grid {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .framework-timeline::before {
+                   content: none;
+                }
+                .framework-step {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                    margin-bottom: 2rem;
+                }
+                 .framework-step > div {
+                    width: 100% !important;
+                }
+                .timeline-dot-container {
+                    display: none;
+                }
+            }
         `}</style>
     </>
 );
@@ -322,15 +345,12 @@ const CarouselCard = ({ project }) => {
         const commonIframeClasses = "w-full h-full bg-white";
         
         if (project.display === 'tablet') {
-             // Define specific container for tablet view, removing items-center
             const tabletContainerClasses = "relative w-full h-full flex justify-center overflow-hidden";
             return (
                 <div className={`${tabletContainerClasses} bg-slate-100 p-0 md:p-4 lg:p-8`}>
-                    {/* Mobile iframe */}
                     <div className="md:hidden w-full h-full">
                          <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
                     </div>
-                    {/* Desktop tablet mockup with my-auto for vertical centering */}
                     <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
                         <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
                             <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses} scrolling="no"></iframe>
@@ -343,12 +363,7 @@ const CarouselCard = ({ project }) => {
         const baseContainerClasses = "relative w-full h-full flex items-center justify-center overflow-hidden";
         if (project.type === 'mobile') {
              return (
-                 <div className={`${baseContainerClasses} bg-slate-100 p-0 md:p-8`}>
-                    {/* Simple iframe for mobile */}
-                    <div className="md:hidden w-full h-full">
-                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
-                    </div>
-                    {/* Full mockup for larger screens */}
+                 <div className={`${baseContainerClasses} bg-slate-100 p-4 md:p-8`}>
                      <div className="hidden md:block">
                         <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
                             <div className="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
@@ -360,6 +375,10 @@ const CarouselCard = ({ project }) => {
                             </div>
                         </div>
                     </div>
+                    {/* Mobile: simple iframe takes full width */}
+                     <div className="md:hidden w-full aspect-[9/16] rounded-2xl overflow-hidden border-8 border-slate-800 shadow-xl">
+                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                     </div>
                  </div>
              );
         }
@@ -384,7 +403,7 @@ const CarouselCard = ({ project }) => {
          <div className="bg-white p-6 md:p-8 flex flex-col justify-between h-full">
             <div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
-                <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                <h3 className="mt-2 text-2xl font-bold text-slate-900 tracking-tight">{project.title}</h3>
                 <p className="mt-4 text-slate-600">{project.description}</p>
             </div>
             <div className="mt-6 pt-6 border-t border-slate-200">
@@ -400,16 +419,16 @@ const CarouselCard = ({ project }) => {
     
     const isThinLayout = project.layout === 'thin';
 
-    const contentClasses = isThinLayout ? 'md:col-span-9 lg:col-span-10' : 'md:col-span-7';
-    const descriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
-
+    // Desktop classes
+    const desktopContentClasses = isThinLayout ? 'md:col-span-9 lg:col-span-10' : 'md:col-span-7';
+    const desktopDescriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
 
     return (
-        <div className="flex flex-col md:grid md:grid-cols-12 h-full">
-            <div className={`aspect-video md:aspect-auto ${contentClasses}`}>
+        <div className="flex flex-col md:grid md:grid-cols-12 h-full featured-work-grid">
+            <div className={`aspect-video md:aspect-auto ${desktopContentClasses}`}>
                 {renderContent()}
             </div>
-            <div className={`flex flex-col ${descriptionClasses}`}>
+            <div className={`flex flex-col ${desktopDescriptionClasses}`}>
                 {descriptionPanel}
             </div>
         </div>
@@ -426,6 +445,15 @@ const FeaturedWork = () => {
             description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
             embedUrl: "https://zenith-sand.vercel.app/", 
             techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
+            layout: 'thin'
+        },
+        { 
+            type: 'web', 
+            category: "UI/UX & Web Development", 
+            title: "Aura Creative Agency", 
+            description: "A visually-driven, animated website for a modern creative agency, focusing on fluid user experience and brand storytelling.", 
+            embedUrl: "https://aura-three-opal.vercel.app/", 
+            techStack: ['React', 'Next.js', 'GSAP', 'Tailwind'],
             layout: 'thin'
         },
         { 
@@ -462,7 +490,7 @@ const FeaturedWork = () => {
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className="grid md:min-h-[660px]">
+                <div className="grid min-h-0 md:min-h-[660px]">
                     {projects.map((project, index) => (
                         <div 
                             key={project.title} 
@@ -498,7 +526,7 @@ const FrameworkStep = ({ step, index }) => {
                     observer.unobserve(entry.target);
                 }
             },
-            { threshold: 0.1 } // Trigger a bit earlier
+            { threshold: 0.1 }
         );
 
         if (currentRef) {
@@ -513,9 +541,9 @@ const FrameworkStep = ({ step, index }) => {
     }, []);
 
     const isEven = index % 2 === 0;
-
+    // Mobile first: always column. Desktop: row/row-reverse
     return (
-        <div ref={itemRef} className={`framework-item group relative flex items-center md:space-x-8 ${isEven ? '' : 'md:flex-row-reverse md:space-x-reverse'}`}>
+        <div ref={itemRef} className={`framework-item framework-step group relative flex items-start md:items-center space-y-4 md:space-y-0 md:space-x-8 ${isEven ? '' : 'md:flex-row-reverse md:space-x-reverse'}`}>
              <div className="w-full md:w-[calc(50%-2.5rem)]">
                  <div className="relative p-6 md:p-8 rounded-2xl framework-card shadow-lg">
                     <div className="relative z-10">
@@ -527,7 +555,7 @@ const FrameworkStep = ({ step, index }) => {
                     </div>
                 </div>
             </div>
-            <div className="hidden md:flex w-20 h-full absolute top-0 left-1/2 -translate-x-1/2 items-center justify-center">
+            <div className="timeline-dot-container hidden md:flex w-20 h-full absolute top-0 left-1/2 -translate-x-1/2 items-center justify-center">
                  <div className="timeline-dot w-10 h-10 rounded-full flex items-center justify-center text-sm">
                    0{index+1}
                 </div>
@@ -553,9 +581,9 @@ const TheFramework = () => {
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A disciplined, end-to-end approach to building successful digital products.</p>
                 </div>
 
-                <div className="relative">
+                <div className="relative framework-timeline">
                     <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-slate-200 hidden md:block" aria-hidden="true"></div>
-                    <div className="space-y-16 md:space-y-24">
+                    <div className="space-y-12 md:space-y-24">
                         {processSteps.map((step, index) => (
                             <FrameworkStep key={index} step={step} index={index} />
                         ))}
@@ -826,8 +854,8 @@ const StreamingCarousel = ({ onReadInsight }) => {
         return stopAutoplay;
     }, []);
 
-    const itemWidthPercentage = 90; // Mobile first
-    const mdItemWidthPercentage = 75; // Desktop
+    const itemWidthPercentage = 90; 
+    const mdItemWidthPercentage = 75;
     const trackOffset = (100 - itemWidthPercentage) / 2;
     const mdTrackOffset = (100 - mdItemWidthPercentage) / 2;
 
@@ -843,7 +871,7 @@ const StreamingCarousel = ({ onReadInsight }) => {
         updateTrackPosition();
         window.addEventListener('resize', updateTrackPosition);
         return () => window.removeEventListener('resize', updateTrackPosition);
-    }, [activeIndex, itemWidthPercentage, mdItemWidthPercentage, trackOffset, mdTrackOffset]);
+    }, [activeIndex]);
 
 
     return (
@@ -867,8 +895,8 @@ const StreamingCarousel = ({ onReadInsight }) => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
                                         <div className="coverflow-content">
                                             <h3 className="text-base md:text-xl font-semibold">{item.category}</h3>
-                                            <p className="text-3xl md:text-5xl font-bold tracking-tight mt-1">{item.title}</p>
-                                            <button onClick={() => onReadInsight(item)} className="mt-4 md:mt-6 inline-block bg-white text-black font-semibold px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-lg hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
+                                            <p className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mt-1">{item.title}</p>
+                                            <button onClick={() => onReadInsight(item)} className="mt-4 md:mt-6 inline-block bg-white text-black font-semibold px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-base hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
                                                 Read Insight
                                             </button>
                                         </div>
