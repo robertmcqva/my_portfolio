@@ -320,17 +320,29 @@ const InsightModal = ({ insight, onClose }) => {
 const CarouselCard = ({ project }) => {
     const renderContent = () => {
         const commonIframeClasses = "w-full h-full bg-white";
-        const containerClasses = "relative w-full h-full bg-slate-900 flex items-center justify-center overflow-hidden";
+        const baseContainerClasses = "relative w-full h-full flex items-center justify-center overflow-hidden";
+
+        if (project.display === 'tablet') {
+            return (
+                <div className={`${baseContainerClasses} bg-slate-100 p-8`}>
+                    <div className="relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] h-[600px] w-[800px] shadow-xl">
+                        <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                            <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         if (project.type === 'mobile') {
              return (
-                 <div className={`${containerClasses} p-6 sm:p-8`}>
-                    <div className="relative mx-auto border-gray-800 bg-gray-800 border-[10px] sm:border-[14px] rounded-[2rem] sm:rounded-[2.5rem] h-full max-h-[550px] aspect-[9/19.5] shadow-2xl">
-                        <div className="w-[100px] sm:w-[148px] h-[14px] sm:h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
-                        <div className="h-[32px] sm:h-[46px] w-[2px] sm:w-[3px] bg-gray-800 absolute -start-[12px] sm:-start-[17px] top-[90px] sm:top-[124px] rounded-s-lg"></div>
-                        <div className="h-[32px] sm:h-[46px] w-[2px] sm:w-[3px] bg-gray-800 absolute -start-[12px] sm:-start-[17px] top-[140px] sm:top-[178px] rounded-s-lg"></div>
-                        <div className="h-[48px] sm:h-[64px] w-[2px] sm:w-[3px] bg-gray-800 absolute -end-[12px] sm:-end-[17px] top-[110px] sm:top-[142px] rounded-e-lg"></div>
-                        <div className="rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                 <div className={`${baseContainerClasses} bg-slate-100 p-8`}>
+                    <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
+                        <div className="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
+                        <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
+                        <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
+                        <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
+                        <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
                            <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
                         </div>
                     </div>
@@ -340,7 +352,7 @@ const CarouselCard = ({ project }) => {
 
         // Default for 'web' and '3d'
         return (
-            <div className={containerClasses}>
+            <div className={`${baseContainerClasses} bg-slate-900`}>
                  <iframe 
                     title={project.title} 
                     frameBorder="0" 
@@ -372,12 +384,18 @@ const CarouselCard = ({ project }) => {
         </div>
     );
     
+    const isThinLayout = project.layout === 'thin';
+
+    const contentClasses = isThinLayout ? 'md:col-span-9 lg:col-span-10' : 'md:col-span-7';
+    const descriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
+
+
     return (
-        <div className="flex flex-col md:grid md:grid-cols-10 h-full">
-            <div className="md:col-span-6 lg:col-span-7 aspect-video md:aspect-auto">
+        <div className="flex flex-col md:grid md:grid-cols-12 h-full">
+            <div className={`aspect-video md:aspect-auto ${contentClasses}`}>
                 {renderContent()}
             </div>
-            <div className="md:col-span-4 lg:col-span-3 flex flex-col">
+            <div className={`flex flex-col ${descriptionClasses}`}>
                 {descriptionPanel}
             </div>
         </div>
@@ -393,11 +411,29 @@ const FeaturedWork = () => {
             title: "Zenith Analytics", 
             description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
             embedUrl: "https://zenith-sand.vercel.app/", 
-            techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'] 
+            techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
+            layout: 'thin'
+        },
+        { 
+            type: 'mobile', 
+            display: 'tablet',
+            category: "Interactive Tablet Kiosk", 
+            title: "Real Estate Showcase", 
+            description: "An interactive kiosk application for showcasing property listings, designed for use on tablet devices in real estate offices or at open houses.", 
+            embedUrl: "https://es1anjvcwkmz0nuetf8y.share.dreamflow.app/", 
+            techStack: ['Flutter', 'Dart', 'Firebase'] 
+        },
+        { 
+            type: '3d', 
+            category: "3D Asset & Game Development", 
+            title: "Game-Ready Vehicle", 
+            description: "A high-fidelity 3D model integrated into a real-time game engine, featuring custom physics and interactive components.", 
+            embedUrl: "https://sketchfab.com/models/1b63ea01e6f443cdad5fec3d366d8cf1/embed?autostart=1&ui_theme=dark&transparent=1&ui_controls=0&ui_infos=0", 
+            techStack: ['Unity', 'C#', 'Blender'],
+            layout: 'thin' 
         },
         { type: 'web', category: "Web Application Showcase", title: "Live Web App", description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", techStack: ['React', 'Next.js', 'Vercel'] },
-        { type: '3d', category: "3D Asset & Game Development", title: "Game-Ready Vehicle", description: "A high-fidelity 3D model integrated into a real-time game engine, featuring custom physics and interactive components.", embedUrl: "https://sketchfab.com/models/1b63ea01e6f443cdad5fec3d366d8cf1/embed?autostart=1&ui_theme=dark&transparent=1&ui_controls=0&ui_infos=0", techStack: ['Unity', 'C#', 'Blender'] },
-        { type: 'mobile', category: "Cross-Platform Mobile App", title: "MVP Showcase", description: "A functional Minimum Viable Product built with Flutter to validate a mobile app concept on both iOS and Android from a single codebase.", embedUrl: "https://es1anjvcwkmz0nuetf8y.share.dreamflow.app", techStack: ['Flutter', 'Dart', 'Firebase'] },
+
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -412,7 +448,7 @@ const FeaturedWork = () => {
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className="grid md:min-h-[600px]">
+                <div className="grid md:min-h-[660px]">
                     {projects.map((project, index) => (
                         <div 
                             key={project.title} 
