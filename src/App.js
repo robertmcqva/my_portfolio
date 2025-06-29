@@ -182,10 +182,6 @@ const GlobalStyles = () => (
 
             /* --- MOBILE-SPECIFIC OVERRIDES --- */
             @media (max-width: 767px) {
-                .featured-work-grid {
-                    display: flex;
-                    flex-direction: column;
-                }
                 .framework-timeline::before {
                    content: none;
                 }
@@ -223,6 +219,7 @@ const XIcon = ({className}) => <svg className={className} xmlns="http://www.w3.o
 const DownloadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
 const LogOutIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
 const MenuIcon = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
+const InfoIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>;
 
 
 // --- Auth & About Modals ---
@@ -339,8 +336,33 @@ const InsightModal = ({ insight, onClose }) => {
     );
 }
 
+const ProjectDetailModal = ({ project, onClose }) => {
+    if (!project) return null;
+
+    return (
+        <div className={`modal-overlay visible`} onClick={onClose}>
+            <div className="modal-content max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-end -mt-2 -mr-2">
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
+                </div>
+                <p className="font-semibold text-slate-600">{project.category}</p>
+                <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                <p className="mt-4 text-slate-600">{project.description}</p>
+                <div className="mt-6 pt-6 border-t border-slate-200">
+                    <h4 className="font-semibold text-slate-800">Key Technologies</h4>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                        {project.techStack.map(tech => (
+                            <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- Featured Work Carousel ---
-const CarouselCard = ({ project }) => {
+const CarouselCard = ({ project, onViewDetails }) => {
     const renderContent = () => {
         const commonIframeClasses = "w-full h-full bg-white";
         
@@ -375,7 +397,6 @@ const CarouselCard = ({ project }) => {
                             </div>
                         </div>
                     </div>
-                    {/* Mobile: simple iframe takes full width */}
                      <div className="md:hidden w-full aspect-[9/16] rounded-2xl overflow-hidden border-8 border-slate-800 shadow-xl">
                          <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
                      </div>
@@ -399,37 +420,40 @@ const CarouselCard = ({ project }) => {
         );
     };
 
-    const descriptionPanel = (
-         <div className="bg-white p-6 md:p-8 flex flex-col justify-between h-full">
-            <div>
-                <p className="font-semibold text-slate-600">{project.category}</p>
-                <h3 className="mt-2 text-2xl font-bold text-slate-900 tracking-tight">{project.title}</h3>
-                <p className="mt-4 text-slate-600">{project.description}</p>
-            </div>
-            <div className="mt-6 pt-6 border-t border-slate-200">
-                <h4 className="font-semibold text-slate-800">Key Technologies</h4>
-                <div className="flex flex-wrap gap-2 mt-3">
-                    {project.techStack.map(tech => (
-                        <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-    
     const isThinLayout = project.layout === 'thin';
-
-    // Desktop classes
     const desktopContentClasses = isThinLayout ? 'md:col-span-9 lg:col-span-10' : 'md:col-span-7';
     const desktopDescriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
 
     return (
-        <div className="flex flex-col md:grid md:grid-cols-12 h-full featured-work-grid">
-            <div className={`aspect-video md:aspect-auto ${desktopContentClasses}`}>
+        <div className="md:grid md:grid-cols-12 h-full">
+            <div className={`relative h-[65vh] md:h-auto md:aspect-auto ${desktopContentClasses}`}>
                 {renderContent()}
+                <div className="md:hidden absolute bottom-4 right-4 z-20">
+                    <button 
+                        onClick={() => onViewDetails(project)}
+                        className="bg-white/80 backdrop-blur-sm text-slate-800 rounded-full p-3 shadow-lg hover:bg-white transition-colors"
+                        aria-label="View project details"
+                    >
+                        <InfoIcon className="w-5 h-5" />
+                    </button>
+                </div>
             </div>
-            <div className={`flex flex-col ${desktopDescriptionClasses}`}>
-                {descriptionPanel}
+            <div className={`hidden ${desktopDescriptionClasses} md:flex flex-col`}>
+                 <div className="bg-white p-6 md:p-8 flex flex-col justify-between h-full">
+                    <div>
+                        <p className="font-semibold text-slate-600">{project.category}</p>
+                        <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                        <p className="mt-4 text-slate-600">{project.description}</p>
+                    </div>
+                    <div className="mt-6 pt-6 border-t border-slate-200">
+                        <h4 className="font-semibold text-slate-800">Key Technologies</h4>
+                        <div className="flex flex-wrap gap-2 mt-3">
+                            {project.techStack.map(tech => (
+                                <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -478,12 +502,14 @@ const FeaturedWork = () => {
 
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [detailProject, setDetailProject] = useState(null);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
     const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
 
     return (
         <section id="work" className="section-padding bg-white">
+            <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
@@ -497,7 +523,7 @@ const FeaturedWork = () => {
                             className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
                         >
                            <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200 h-full">
-                              <CarouselCard project={project} />
+                              <CarouselCard project={project} onViewDetails={setDetailProject} />
                            </div>
                         </div>
                     ))}
