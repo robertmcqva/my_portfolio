@@ -320,30 +320,44 @@ const InsightModal = ({ insight, onClose }) => {
 const CarouselCard = ({ project }) => {
     const renderContent = () => {
         const commonIframeClasses = "w-full h-full bg-white";
-        const baseContainerClasses = "relative w-full h-full flex items-center justify-center overflow-hidden";
-
+        
         if (project.display === 'tablet') {
+             // Define specific container for tablet view, removing items-center
+            const tabletContainerClasses = "relative w-full h-full flex justify-center overflow-hidden";
             return (
-                <div className={`${baseContainerClasses} bg-slate-100 p-8`}>
-                    <div className="relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] h-[600px] w-[800px] shadow-xl">
+                <div className={`${tabletContainerClasses} bg-slate-100 p-0 md:p-4 lg:p-8`}>
+                    {/* Mobile iframe */}
+                    <div className="md:hidden w-full h-full">
+                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                    </div>
+                    {/* Desktop tablet mockup with my-auto for vertical centering */}
+                    <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
                         <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                            <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                            <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses} scrolling="no"></iframe>
                         </div>
                     </div>
                 </div>
             );
         }
 
+        const baseContainerClasses = "relative w-full h-full flex items-center justify-center overflow-hidden";
         if (project.type === 'mobile') {
              return (
-                 <div className={`${baseContainerClasses} bg-slate-100 p-8`}>
-                    <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
-                        <div className="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
-                        <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
-                        <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
-                        <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
-                        <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                           <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                 <div className={`${baseContainerClasses} bg-slate-100 p-0 md:p-8`}>
+                    {/* Simple iframe for mobile */}
+                    <div className="md:hidden w-full h-full">
+                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                    </div>
+                    {/* Full mockup for larger screens */}
+                     <div className="hidden md:block">
+                        <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
+                            <div className="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
+                            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
+                            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
+                            <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
+                            <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                               <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                            </div>
                         </div>
                     </div>
                  </div>
