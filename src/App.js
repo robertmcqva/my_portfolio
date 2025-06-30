@@ -72,7 +72,7 @@ const GlobalStyles = () => (
             body { font-family: 'Inter', sans-serif; background-color: var(--c-background); color: var(--c-text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
             .glass-header { background-color: rgba(248, 250, 252, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
             .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
-            @media (min-width: 1024px) { .section-padding { padding-top: 6rem; padding-bottom: 6rem; } } /* Adjusted desktop padding */
+            @media (min-width: 1024px) { .section-padding { padding-top: 6rem; padding-bottom: 6rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             
             .carousel-slide {
@@ -140,7 +140,6 @@ const GlobalStyles = () => (
                 box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
             }
 
-            /* --- STREAMING CAROUSEL STYLES (COVERFLOW) --- */
             .coverflow-container {
                 overflow: hidden;
             }
@@ -150,51 +149,35 @@ const GlobalStyles = () => (
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1);
             }
             .coverflow-item {
-                flex: 0 0 90%;
-                min-width: 0;
-                position: relative;
+                flex: 0 0 90%; min-width: 0; position: relative;
                 transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.6s ease;
-                opacity: 0.4;
-                transform: scale(0.85);
+                opacity: 0.4; transform: scale(0.85);
             }
-            @media (min-width: 768px) {
-                .coverflow-item {
-                    flex: 0 0 75%;
-                }
-            }
-            .coverflow-item.active {
-                opacity: 1;
-                transform: scale(1);
-            }
-            .coverflow-item.active .coverflow-content {
-                opacity: 1;
-            }
+            @media (min-width: 768px) { .coverflow-item { flex: 0 0 75%; } }
+            .coverflow-item.active { opacity: 1; transform: scale(1); }
+            .coverflow-item.active .coverflow-content { opacity: 1; }
             .coverflow-content {
-                position: absolute;
-                bottom: 1.5rem;
-                left: 1.5rem;
-                right: 1.5rem;
-                color: white;
-                opacity: 0;
-                transition: opacity 0.6s ease;
-                pointer-events: none;
+                position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
+                color: white; opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
             }
 
-            /* --- MOBILE-SPECIFIC OVERRIDES --- */
+            /* --- Mobile Overrides --- */
             @media (max-width: 767px) {
-                .framework-timeline::before {
-                   content: none;
-                }
-                .framework-step {
-                    flex-direction: column !important;
-                    align-items: stretch !important;
-                    margin-bottom: 2rem;
-                }
-                 .framework-step > div {
-                    width: 100% !important;
-                }
-                .timeline-dot-container {
-                    display: none;
+                .framework-timeline::before { content: none; }
+                .framework-step { flex-direction: column !important; align-items: stretch !important; margin-bottom: 2rem; }
+                .framework-step > div { width: 100% !important; }
+                .timeline-dot-container { display: none; }
+            }
+            
+            /* --- Modal Open Effect --- */
+            #page-wrapper {
+                transition: filter 0.3s ease-in-out;
+            }
+            @media (min-width: 768px) {
+                body.modal-open #page-wrapper {
+                    filter: blur(4px);
+                    --c-text-primary: #f59e0b; /* yellow-500 */
+                    --c-text-secondary: #fcd34d; /* yellow-300 */
                 }
             }
         `}</style>
@@ -364,41 +347,35 @@ const ProjectDetailModal = ({ project, onClose }) => {
 // --- Featured Work Carousel ---
 const CarouselCard = ({ project, onViewDetails }) => {
     const renderContent = () => {
-        const commonIframeClasses = "w-full h-full bg-white";
-        
         if (project.display === 'tablet') {
-            const tabletContainerClasses = "relative w-full h-full flex justify-center overflow-hidden";
             return (
-                <div className={`${tabletContainerClasses} bg-slate-100 p-0 md:p-4 lg:p-8`}>
-                    <div className="md:hidden w-full h-full">
-                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
-                    </div>
-                    <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
-                        <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                            <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses} scrolling="no"></iframe>
+                 <div className="relative w-full bg-slate-100 h-0 pb-[75%] md:h-full md:pb-0">
+                    <div className="absolute inset-0 md:p-4 lg:p-8 flex justify-center items-center">
+                        <div className="md:hidden w-full h-full">
+                            <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white" scrolling="no"></iframe>
+                        </div>
+                        <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
+                            <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                                <iframe src={project.embedUrl} title={project.title} className="w-full h-full" scrolling="no"></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
             );
         }
 
-        const baseContainerClasses = "relative w-full h-full flex items-center justify-center overflow-hidden";
         if (project.type === 'mobile') {
              return (
-                 <div className={`${baseContainerClasses} bg-slate-100 p-4 md:p-8`}>
+                 <div className="relative w-full h-full flex items-center justify-center bg-slate-100 p-4 md:p-8">
                      <div className="hidden md:block">
-                        <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
-                            <div className="w-[148px] h-[18px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
-                            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
-                            <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
-                            <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
+                        <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
                             <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                               <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                               <iframe src={project.embedUrl} title={project.title} className="w-full h-full"></iframe>
                             </div>
                         </div>
                     </div>
                      <div className="md:hidden w-full aspect-[9/16] rounded-2xl overflow-hidden border-8 border-slate-800 shadow-xl">
-                         <iframe src={project.embedUrl} title={project.title} className={commonIframeClasses}></iframe>
+                         <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white"></iframe>
                      </div>
                  </div>
              );
@@ -406,7 +383,7 @@ const CarouselCard = ({ project, onViewDetails }) => {
 
         // Default for 'web' and '3d'
         return (
-            <div className={`${baseContainerClasses} bg-slate-900`}>
+            <div className="relative w-full bg-slate-900 h-0 pb-[56.25%] md:h-full md:pb-0">
                  <iframe 
                     title={project.title} 
                     frameBorder="0" 
@@ -414,7 +391,7 @@ const CarouselCard = ({ project, onViewDetails }) => {
                     mozallowfullscreen="true" 
                     webkitallowfullscreen="true" 
                     src={project.embedUrl} 
-                    className={commonIframeClasses}
+                    className="absolute top-0 left-0 w-full h-full bg-white"
                  ></iframe>
             </div>
         );
@@ -425,8 +402,8 @@ const CarouselCard = ({ project, onViewDetails }) => {
     const desktopDescriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
 
     return (
-        <div className="md:grid md:grid-cols-12 h-full">
-            <div className={`relative h-[65vh] md:h-auto md:aspect-auto ${desktopContentClasses}`}>
+        <div className="md:grid md:grid-cols-12 md:h-full">
+            <div className={`relative ${desktopContentClasses} md:h-full`}>
                 {renderContent()}
                 <div className="md:hidden absolute bottom-4 right-4 z-20">
                     <button 
@@ -460,7 +437,7 @@ const CarouselCard = ({ project, onViewDetails }) => {
 };
 
 
-const FeaturedWork = () => {
+const FeaturedWork = ({ onProjectSelect }) => {
     const projects = [
         { 
             type: 'web', 
@@ -502,28 +479,26 @@ const FeaturedWork = () => {
 
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [detailProject, setDetailProject] = useState(null);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
     const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
 
     return (
         <section id="work" className="section-padding bg-white">
-            <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
                 </div>
 
-                <div className="grid min-h-0 md:min-h-[660px]">
+                <div className="grid md:min-h-[660px]">
                     {projects.map((project, index) => (
                         <div 
                             key={project.title} 
                             className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
                         >
                            <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200 h-full">
-                              <CarouselCard project={project} onViewDetails={setDetailProject} />
+                              <CarouselCard project={project} onViewDetails={onProjectSelect} />
                            </div>
                         </div>
                     ))}
@@ -567,7 +542,7 @@ const FrameworkStep = ({ step, index }) => {
     }, []);
 
     const isEven = index % 2 === 0;
-    // Mobile first: always column. Desktop: row/row-reverse
+    
     return (
         <div ref={itemRef} className={`framework-item framework-step group relative flex items-start md:items-center space-y-4 md:space-y-0 md:space-x-8 ${isEven ? '' : 'md:flex-row-reverse md:space-x-reverse'}`}>
              <div className="w-full md:w-[calc(50%-2.5rem)]">
@@ -1097,13 +1072,24 @@ function AppContent() {
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
     const [selectedInsight, setSelectedInsight] = useState(null);
+    const [detailProject, setDetailProject] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject;
+
+    useEffect(() => {
+        if (anyModalOpen) {
+            document.body.classList.add('modal-open');
+        } else {
+            document.body.classList.remove('modal-open');
+        }
+    }, [anyModalOpen]);
 
 
     const handleSignOut = async () => {
         try {
             await signOut(auth);
-            setIsMenuOpen(false); // Close menu on sign out
+            setIsMenuOpen(false);
         } catch (error) {
             console.error("Error signing out:", error);
         }
@@ -1111,9 +1097,8 @@ function AppContent() {
     
     const handleNavClick = (e, targetId) => {
         e.preventDefault();
-        setIsMenuOpen(false); // Close mobile menu on link click
+        setIsMenuOpen(false);
         const element = document.getElementById(targetId);
-        // Add a small offset to account for the fixed header
         const headerOffset = 80;
         const elementPosition = element?.getBoundingClientRect().top ?? 0;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -1140,87 +1125,88 @@ function AppContent() {
     return (
         <>
             <GlobalStyles />
+            <div id="page-wrapper">
+                <header className="fixed top-0 left-0 right-0 z-50 glass-header">
+                    <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+                        <a href="#" onClick={(e) => {e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'})}} aria-label="Home">
+                            <LogoIcon className="h-8 w-auto text-slate-900" />
+                        </a>
+                        <div className="hidden md:flex items-center gap-8">
+                            <NavLinks />
+                            {currentUser ? (
+                                <div className="relative group">
+                                    <button className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center">
+                                        {currentUser.email?.charAt(0).toUpperCase() || 'A'}
+                                    </button>
+                                    <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 hidden group-hover:block">
+                                        <button onClick={handleSignOut} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                                            <LogOutIcon className="w-4 h-4"/> Sign Out
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <button onClick={() => setAuthModalOpen(true)} className="text-sm font-bold bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
+                            )}
+                        </div>
+                        <div className="md:hidden">
+                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label="Toggle menu">
+                                {isMenuOpen ? <XIcon className="w-6 h-6"/> : <MenuIcon className="w-6 h-6"/>}
+                            </button>
+                        </div>
+                    </nav>
+                    <div className={`absolute top-20 left-0 w-full bg-white/95 backdrop-blur-md shadow-lg md:hidden transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                        <div className="px-8 py-6">
+                            <nav className="flex flex-col items-center space-y-4">
+                                <NavLinks isMobile={true}/>
+                                <div className="pt-6 w-full border-t border-slate-200 text-center">
+                                    {currentUser ? (
+                                        <div className="flex flex-col items-center space-y-4">
+                                            <p className="text-slate-600">{currentUser.email}</p>
+                                            <button onClick={handleSignOut} className="w-full text-lg font-bold bg-slate-100 text-slate-800 px-8 py-3 rounded-lg flex items-center justify-center gap-2">
+                                                <LogOutIcon className="w-5 h-5"/> Sign Out
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button onClick={() => { setIsMenuOpen(false); setAuthModalOpen(true); }} className="w-full text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
+                                    )}
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </header>
+
+                <main>
+                    <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
+                        <div className="absolute inset-0 z-0 opacity-20">
+                            <div className="w-72 h-72 md:w-96 md:h-96 bg-slate-200 rounded-full absolute -top-20 -left-20 filter blur-3xl"></div>
+                            <div className="w-64 h-64 md:w-80 md:h-80 bg-gray-200 rounded-full absolute -bottom-20 -right-20 filter blur-3xl"></div>
+                        </div>
+                        <div className="relative z-10 text-center px-4">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+                                Engineering <br />Digital Experiences
+                            </h1>
+                            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                                A showcase of full-stack development, AI integration, and user-centric design.
+                            </p>
+                        </div>
+                    </section>
+                    
+                    <FeaturedWork onProjectSelect={setDetailProject} />
+                    <TheFramework />
+                    <StreamingCarousel onReadInsight={setSelectedInsight} />
+                    <Testimonials />
+                    <Contact />
+                </main>
+
+                <Footer />
+                <ScrollToTopButton />
+            </div>
+
+            {/* Modals are outside the page-wrapper to avoid being blurred */}
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
             <AboutModal isOpen={isAboutModalOpen} onClose={() => setAboutModalOpen(false)} />
             <InsightModal insight={selectedInsight} onClose={() => setSelectedInsight(null)} />
-
-            <header className="fixed top-0 left-0 right-0 z-50 glass-header">
-                 <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
-                     <a href="#" onClick={(e) => {e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'})}} aria-label="Home">
-                        <LogoIcon className="h-8 w-auto text-slate-900" />
-                    </a>
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-8">
-                         <NavLinks />
-                         {currentUser ? (
-                             <div className="relative group">
-                                <button className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center">
-                                    {currentUser.email?.charAt(0).toUpperCase() || 'A'}
-                                </button>
-                                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 hidden group-hover:block">
-                                    <button onClick={handleSignOut} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
-                                        <LogOutIcon className="w-4 h-4"/> Sign Out
-                                    </button>
-                                </div>
-                             </div>
-                         ) : (
-                             <button onClick={() => setAuthModalOpen(true)} className="text-sm font-bold bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
-                         )}
-                    </div>
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label="Toggle menu">
-                            {isMenuOpen ? <XIcon className="w-6 h-6"/> : <MenuIcon className="w-6 h-6"/>}
-                        </button>
-                    </div>
-                </nav>
-                 {/* Mobile Menu Panel */}
-                 <div className={`absolute top-20 left-0 w-full bg-white/95 backdrop-blur-md shadow-lg md:hidden transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="px-8 py-6">
-                        <nav className="flex flex-col items-center space-y-4">
-                            <NavLinks isMobile={true}/>
-                             <div className="pt-6 w-full border-t border-slate-200 text-center">
-                                {currentUser ? (
-                                    <div className="flex flex-col items-center space-y-4">
-                                        <p className="text-slate-600">{currentUser.email}</p>
-                                        <button onClick={handleSignOut} className="w-full text-lg font-bold bg-slate-100 text-slate-800 px-8 py-3 rounded-lg flex items-center justify-center gap-2">
-                                            <LogOutIcon className="w-5 h-5"/> Sign Out
-                                        </button>
-                                    </div>
-                                ) : (
-                                     <button onClick={() => { setIsMenuOpen(false); setAuthModalOpen(true); }} className="w-full text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors">Sign In</button>
-                                )}
-                            </div>
-                        </nav>
-                    </div>
-                 </div>
-            </header>
-
-            <main>
-                <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
-                    <div className="absolute inset-0 z-0 opacity-20">
-                        <div className="w-72 h-72 md:w-96 md:h-96 bg-slate-200 rounded-full absolute -top-20 -left-20 filter blur-3xl"></div>
-                        <div className="w-64 h-64 md:w-80 md:h-80 bg-gray-200 rounded-full absolute -bottom-20 -right-20 filter blur-3xl"></div>
-                    </div>
-                     <div className="relative z-10 text-center px-4">
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
-                            Engineering <br />Digital Experiences
-                        </h1>
-                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                            A showcase of full-stack development, AI integration, and user-centric design.
-                        </p>
-                    </div>
-                </section>
-                
-                <FeaturedWork />
-                <TheFramework />
-                <StreamingCarousel onReadInsight={setSelectedInsight} />
-                <Testimonials />
-                <Contact />
-            </main>
-
-            <Footer />
-            <ScrollToTopButton />
+            <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
         </>
     );
 }
