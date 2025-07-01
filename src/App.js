@@ -498,7 +498,8 @@ const FeaturedWork = ({ onProjectSelect }) => {
             techStack: ['Flutter', 'Dart', 'Firebase'] 
         },
         { 
-            type: '3d', 
+            type: '3d',
+            mobileDisplay: 'mobile',
             category: "3D Asset & Game Development", 
             title: "Game-Ready Vehicle", 
             description: "A high-fidelity 3D model integrated into a real-time game engine, featuring custom physics and interactive components.", 
@@ -1138,6 +1139,33 @@ function AppContent() {
     const [selectedInsight, setSelectedInsight] = useState(null);
     const [detailProject, setDetailProject] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
+    const controlNavbar = () => {
+        if (typeof window !== 'undefined') {
+            if (isMenuOpen) {
+                setIsHeaderVisible(true);
+                return;
+            }
+            if (window.scrollY > lastScrollY && window.scrollY > 80) { // Scrolling down
+                setIsHeaderVisible(false);
+            } else { // Scrolling up
+                setIsHeaderVisible(true);
+            }
+            setLastScrollY(window.scrollY);
+        }
+    };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            window.addEventListener('scroll', controlNavbar);
+            return () => {
+                window.removeEventListener('scroll', controlNavbar);
+            };
+        }
+    }, [lastScrollY, isMenuOpen]);
+
 
     const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject;
 
@@ -1191,7 +1219,7 @@ function AppContent() {
             <GlobalStyles />
             <BackgroundEffects />
             <div id="page-wrapper" className="relative z-10">
-                <header className="fixed top-0 left-0 right-0 z-50 glass-header">
+                <header className={`fixed top-0 left-0 right-0 z-50 glass-header transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}>
                     <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
                         <a href="#" onClick={(e) => {e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'})}} aria-label="Home">
                             <LogoIcon className="h-8 w-auto text-slate-900" />
