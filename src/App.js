@@ -505,7 +505,15 @@ const FeaturedWork = ({ onProjectSelect }) => {
             embedUrl: "https://sketchfab.com/models/1b63ea01e6f443cdad5fec3d366d8cf1/embed?autostart=1&ui_theme=dark&transparent=1&ui_controls=0&ui_infos=0", 
             techStack: ['Unity', 'C#', 'Blender'],
         },
-        { type: 'web', category: "Web Application Showcase", title: "Live Web App", description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", techStack: ['React', 'Next.js', 'Vercel'] },
+        { 
+            type: 'web', 
+            mobileDisplay: 'mobile',
+            category: "Web Application Showcase", 
+            title: "Live Web App", 
+            description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", 
+            embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", 
+            techStack: ['React', 'Next.js', 'Vercel'] 
+        },
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPanelCollapsed, setIsPanelCollapsed] = useState(true);
