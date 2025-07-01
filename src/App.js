@@ -76,7 +76,7 @@ const GlobalStyles = () => (
                 -webkit-font-smoothing: antialiased; 
                 -moz-osx-font-smoothing: grayscale; 
                 scroll-behavior: smooth;
-                background-color: #e2e8f0; /* Fallback color */
+                background-color: #f8fafc; /* Updated background */
                 overflow-x: hidden;
             }
 
@@ -93,54 +93,51 @@ const GlobalStyles = () => (
             .light-orb {
                 position: absolute;
                 border-radius: 50%;
-                filter: blur(100px);
-                opacity: 0.15;
+                filter: blur(120px); /* Increased blur */
+                opacity: 0.1; /* Slightly reduced opacity */
                 will-change: transform;
             }
 
             @keyframes move-orb-1 {
-                0% { transform: translate(10vw, -10vh); }
-                25% { transform: translate(60vw, 40vh); }
-                50% { transform: translate(20vw, 80vh); }
-                75% { transform: translate(-20vw, 30vh); }
-                100% { transform: translate(10vw, -10vh); }
+                0% { transform: translate(10vw, -10vh) scale(1); }
+                25% { transform: translate(60vw, 40vh) scale(1.2); }
+                50% { transform: translate(20vw, 80vh) scale(0.9); }
+                75% { transform: translate(-20vw, 30vh) scale(1.1); }
+                100% { transform: translate(10vw, -10vh) scale(1); }
             }
             @keyframes move-orb-2 {
-                0% { transform: translate(80vw, 20vh); }
-                25% { transform: translate(30vw, 70vh); }
-                50% { transform: translate(70vw, -20vh); }
-                75% { transform: translate(20vw, 10vh); }
-                100% { transform: translate(80vw, 20vh); }
+                0% { transform: translate(80vw, 20vh) scale(1); }
+                25% { transform: translate(30vw, 70vh) scale(0.8); }
+                50% { transform: translate(70vw, -20vh) scale(1.2); }
+                75% { transform: translate(20vw, 10vh) scale(1); }
+                100% { transform: translate(80vw, 20vh) scale(1); }
             }
             @keyframes move-orb-3 {
-                0% { transform: translate(50vw, 90vh); }
-                25% { transform: translate(-10vw, 10vh); }
-                50% { transform: translate(40vw, 50vh); }
-                75% { transform: translate(90vw, 20vh); }
-                100% { transform: translate(50vw, 90vh); }
+                0% { transform: translate(50vw, 90vh) scale(1.1); }
+                25% { transform: translate(-10vw, 10vh) scale(0.9); }
+                50% { transform: translate(40vw, 50vh) scale(1); }
+                75% { transform: translate(90vw, 20vh) scale(1.2); }
+                100% { transform: translate(50vw, 90vh) scale(1.1); }
             }
 
             .light-orb-1 {
-                width: 500px;
-                height: 500px;
-                background-color: #a5b4fc; /* Indigo-300 */
-                animation: move-orb-1 45s linear infinite;
+                width: 600px; height: 600px;
+                background-color: #a5b4fc;
+                animation: move-orb-1 50s linear infinite;
             }
             .light-orb-2 {
-                width: 600px;
-                height: 600px;
-                background-color: #f9a8d4; /* Pink-300 */
-                animation: move-orb-2 55s linear infinite;
+                width: 700px; height: 700px;
+                background-color: #f9a8d4;
+                animation: move-orb-2 60s linear infinite;
             }
              .light-orb-3 {
-                width: 450px;
-                height: 450px;
-                background-color: #93c5fd; /* Blue-300 */
-                animation: move-orb-3 50s linear infinite;
+                width: 550px; height: 550px;
+                background-color: #93c5fd;
+                animation: move-orb-3 55s linear infinite;
             }
 
 
-            .glass-header { background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.5); }
+            .glass-header { background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.7); }
             .section-padding { padding-top: 6rem; padding-bottom: 6rem; }
             @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -164,26 +161,6 @@ const GlobalStyles = () => (
             @media (min-width: 640px) { .modal-content { padding: 2rem; } }
             .modal-overlay.visible .modal-content { transform: scale(1); }
             
-            .framework-card {
-                background-color: rgba(255, 255, 255, 0.7);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid #ffffff;
-                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-            }
-
-            @media (min-width: 768px) {
-                .framework-card:hover {
-                    transform: translateY(-10px) scale(1.03);
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-                }
-            }
-            
-             .icon-container {
-                background: radial-gradient(circle, #ffffff 60%, #f1f5f9 100%);
-                box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-            }
-
             .coverflow-container {
                 overflow: hidden;
             }
@@ -205,34 +182,36 @@ const GlobalStyles = () => (
                 color: white; opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
             }
             
-            /* --- Modal Open Effect --- */
             #page-wrapper {
                 transition: filter 0.3s ease-in-out;
             }
-            @media (min-width: 768px) {
-                body.modal-open #page-wrapper {
-                    filter: blur(4px);
-                    --c-text-primary: #f59e0b; /* yellow-500 */
-                    --c-text-secondary: #fcd34d; /* yellow-300 */
-                }
+            body.modal-open #page-wrapper {
+                filter: blur(4px);
             }
 
-            @keyframes infinite-scroll {
-                from { transform: translateX(0); }
-                to { transform: translateX(-100%); }
+            /* --- Framework Section New Styles --- */
+            @keyframes framework-card-intro {
+                from { opacity: 0; transform: translateY(25px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
-            .scroller {
-                display: flex;
-                width: max-content;
-            }
-            
-            .scroller[data-animated="true"] {
-                 animation: infinite-scroll 80s linear infinite;
+            .framework-card {
+                animation: framework-card-intro 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            .scroller[data-animated="true"]:hover {
-                animation-play-state: paused;
+            .framework-nav-button {
+                background: transparent;
+                transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            }
+
+            .framework-nav-button:not(.active):hover {
+                transform: scale(1.03);
+                background: rgba(241, 245, 249, 0.7); /* slate-100 with opacity */
+            }
+
+            .framework-nav-button.active {
+                background: linear-gradient(180deg, var(--gradient-color) 0%, rgba(255,255,255,0) 100%);
+                box-shadow: 0 4px 20px -5px var(--gradient-color);
             }
         `}</style>
     </>
@@ -255,11 +234,11 @@ const TwitterIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" w
 const ChevronLeftIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
 const ChevronRightIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
 const ChevronUpIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"></polyline></svg>;
-const CompassIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>;
-const LayersIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
-const CodeIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>;
-const CloudUploadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="22"></line></svg>;
-const SyncIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M16 4v4h4"/></svg>;
+const CompassIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>;
+const LayersIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
+const CodeIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>;
+const CloudUploadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="22"></line></svg>;
+const SyncIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M16 4v4h4"/></svg>;
 const XIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 const DownloadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
 const LogOutIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
@@ -298,7 +277,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         <div className={`modal-overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}>
             <div className="modal-content max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold">{isLoginView ? 'Sign In' : 'Create Account'}</h2>
+                    <h2 className="text-2xl font-bold tracking-tighter">{isLoginView ? 'Sign In' : 'Create Account'}</h2>
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
                 {error && <p className="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm">{error}</p>}
@@ -335,7 +314,7 @@ const AboutModal = ({ isOpen, onClose }) => {
                         </div>
                     </div>
                     <div className="md:col-span-2">
-                        <h2 className="text-2xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
+                        <h2 className="text-2xl lg:text-4xl font-extrabold tracking-tighter text-slate-900">
                             Driven by a passion for solving complex problems.
                         </h2>
                         <p className="mt-6 text-base md:text-lg text-slate-600">
@@ -369,7 +348,7 @@ const InsightModal = ({ insight, onClose }) => {
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <p className="font-semibold text-slate-600">{insight.category}</p>
-                        <h2 className="text-2xl md:text-3xl font-bold mt-1">{insight.title}</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mt-1">{insight.title}</h2>
                     </div>
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100 -mt-2 -mr-2 flex-shrink-0"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
@@ -391,7 +370,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
                     <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
-                <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                <h3 className="mt-2 text-2xl font-extrabold tracking-tighter text-slate-900">{project.title}</h3>
                 <p className="mt-4 text-slate-600">{project.description}</p>
                 <div className="mt-6 pt-6 border-t border-slate-200">
                     <h4 className="font-semibold text-slate-800">Key Technologies</h4>
@@ -405,30 +384,6 @@ const ProjectDetailModal = ({ project, onClose }) => {
         </div>
     );
 };
-
-const FrameworkDetailModal = ({ step, onClose }) => {
-    if (!step) return null;
-
-    return (
-        <div className={`modal-overlay visible`} onClick={onClose}>
-            <div className="modal-content max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-end -mt-2 -mr-2">
-                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
-                </div>
-                 <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center icon-container flex-shrink-0">
-                        <step.icon className="w-7 h-7 text-slate-500" />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold">{step.title}</h2>
-                </div>
-                <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed">
-                   {step.detailedDescription}
-                </div>
-            </div>
-        </div>
-    );
-};
-
 
 // --- Featured Work Carousel ---
 const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
@@ -492,7 +447,7 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
                 <div className="p-6 md:p-8 flex flex-col justify-between h-full w-full">
                     <div>
                         <p className="font-semibold text-slate-600">{project.category}</p>
-                        <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                        <h3 className="mt-2 text-2xl font-extrabold tracking-tighter text-slate-900">{project.title}</h3>
                         <p className="mt-4 text-slate-600">{project.description}</p>
                     </div>
                     <div className="mt-6 pt-6 border-t border-slate-200/50">
@@ -569,10 +524,10 @@ const FeaturedWork = ({ onProjectSelect }) => {
     const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
 
     return (
-        <section id="work" className="section-padding bg-white/20 backdrop-blur-xl">
+        <section id="work" className="section-padding bg-transparent">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">The Work</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Curated projects showcasing unique solutions.</p>
                 </div>
 
@@ -610,145 +565,95 @@ const FeaturedWork = ({ onProjectSelect }) => {
 };
 
 
-// --- The Framework Section ---
-const FrameworkCard = ({ step, onViewDetails, index }) => {
-    return (
-        <div className="h-full p-2">
-            <div className="relative p-8 rounded-2xl framework-card shadow-lg h-full flex flex-col text-center overflow-hidden">
-                <div className="absolute top-4 right-4">
-                    <button onClick={() => onViewDetails(step)} className="p-2 rounded-full hover:bg-slate-200/50 transition-colors" aria-label="Learn more about this step">
-                        <InfoIcon className="w-5 h-5 text-slate-500"/>
-                    </button>
-                </div>
-                <div className="flex-grow flex flex-col justify-center items-center">
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center icon-container mb-6">
-                        <step.icon className="w-8 h-8 text-slate-500" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-slate-900">{step.title}</h3>
-                    <p className="mt-3 text-slate-600 leading-relaxed">{step.description}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const TheFramework = ({ onStepSelect }) => {
+// --- The Framework Section (Apple-inspired Vertical Story) ---
+const TheFramework = () => {
     const processSteps = [
         { 
             icon: CompassIcon, 
             title: "Discover", 
-            description: "Deeply understanding the problem, users, and goals.",
-            detailedDescription: "The initial phase is all about deep immersion. I conduct stakeholder interviews, user research, and competitive analysis to build a comprehensive understanding of the project's context, challenges, and opportunities. The goal is to define a clear problem statement and establish measurable success metrics that align user needs with business objectives."
+            subtitle: "Defining the 'Why'",
+            description: "The initial phase is all about deep immersion. I conduct stakeholder interviews, user research, and competitive analysis to build a comprehensive understanding of the project's context, challenges, and opportunities. The goal is to define a clear problem statement and establish measurable success metrics that align user needs with business objectives.",
+            accentColor: 'text-blue-500',
+            gradientColor: 'rgba(59, 130, 246, 0.1)'
         },
         { 
             icon: LayersIcon, 
             title: "Design", 
-            description: "Architecting robust solutions, from UI to system design.",
-            detailedDescription: "With a clear strategy, I move to architecting the solution. This involves creating user flow diagrams, wireframes, and high-fidelity prototypes to map out the user experience. Simultaneously, I design a scalable and maintainable system architecture, planning the data models, API contracts, and technology stack that will form the foundation of the product."
+            subtitle: "Architecting the Solution",
+            description: "With a clear strategy, I move to architecting the solution. This involves creating user flow diagrams, wireframes, and high-fidelity prototypes to map out the user experience. Simultaneously, I design a scalable and maintainable system architecture, planning the data models, API contracts, and technology stack.",
+            accentColor: 'text-purple-500',
+            gradientColor: 'rgba(168, 85, 247, 0.1)'
         },
         { 
             icon: CodeIcon, 
             title: "Develop", 
-            description: "Building, testing, and iterating with clean, scalable code.",
-            detailedDescription: "This is where the vision comes to life. Working in agile sprints, I write clean, efficient, and well-documented code. I practice test-driven development and implement continuous integration pipelines to ensure code quality and stability. Regular code reviews and iterative feedback loops are crucial to this process."
+            subtitle: "Bringing Vision to Life",
+            description: "This is where the vision comes to life. Working in agile sprints, I write clean, efficient, and well-documented code. I practice test-driven development and implement continuous integration pipelines to ensure code quality and stability. Regular code reviews and iterative feedback loops are crucial to this process.",
+            accentColor: 'text-green-500',
+            gradientColor: 'rgba(34, 197, 94, 0.1)'
         },
         { 
             icon: CloudUploadIcon, 
             title: "Deploy", 
-            description: "Managing deployment, monitoring performance, and gathering feedback.",
-            detailedDescription: "A seamless launch is critical. I establish automated CI/CD (Continuous Integration/Continuous Deployment) pipelines to make deployments predictable and reliable. I configure cloud infrastructure for scalability and security, implement robust monitoring and logging to track application health, and perform final quality assurance checks before going live."
+            subtitle: "Delivering to the World",
+            description: "A seamless launch is critical. I establish automated CI/CD pipelines to make deployments predictable and reliable. I configure cloud infrastructure for scalability and security, implement robust monitoring and logging to track application health, and perform final quality assurance checks before going live.",
+            accentColor: 'text-indigo-500',
+            gradientColor: 'rgba(99, 102, 241, 0.1)'
         },
         { 
             icon: SyncIcon, 
             title: "Evolve", 
-            description: "Evolving the product with data-driven insights.",
-            detailedDescription: "The project doesn't end at launch. I continuously monitor application performance, user engagement, and key business metrics. By analyzing this data and gathering direct user feedback, I identify opportunities for improvement and plan the next cycle of feature enhancements, ensuring the product evolves and continues to deliver value over time."
+            subtitle: "Iterating for Impact",
+            description: "The project doesn't end at launch. I continuously monitor application performance, user engagement, and key business metrics. By analyzing this data and gathering direct user feedback, I identify opportunities for improvement and plan the next cycle of feature enhancements, ensuring the product evolves and continues to deliver value.",
+            accentColor: 'text-pink-500',
+            gradientColor: 'rgba(236, 72, 153, 0.1)'
         }
     ];
 
-    const scrollerRef = useRef(null);
-    const scrollIntervalRef = useRef(null);
-    const mouseMoveTimeoutRef = useRef(null);
-    const [isHovering, setIsHovering] = useState(false);
-
-    const startScrolling = (speed) => {
-        if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
-        scrollIntervalRef.current = setInterval(() => {
-            if (scrollerRef.current) {
-                scrollerRef.current.scrollLeft += speed;
-            }
-        }, 10);
-    };
-
-    const stopScrolling = () => {
-        if (scrollIntervalRef.current) {
-            clearInterval(scrollIntervalRef.current);
-            scrollIntervalRef.current = null;
-        }
-    };
-
-    const handleMouseMove = (e) => {
-        if (!scrollerRef.current) return;
-
-        if (mouseMoveTimeoutRef.current) {
-            clearTimeout(mouseMoveTimeoutRef.current);
-        }
-
-        const { left, width } = scrollerRef.current.getBoundingClientRect();
-        const mouseX = e.clientX - left;
-        const scrollSpeed = 2;
-        const deadZone = 0.4; // 40% of the container width in the middle is a dead zone
-
-        const leftActivationZoneEnd = (width * (1 - deadZone)) / 2;
-        const rightActivationZoneStart = width - leftActivationZoneEnd;
-
-        if (mouseX < leftActivationZoneEnd) {
-            startScrolling(-scrollSpeed);
-        } else if (mouseX > rightActivationZoneStart) {
-            startScrolling(scrollSpeed);
-        } else {
-            stopScrolling();
-        }
-
-        mouseMoveTimeoutRef.current = setTimeout(() => {
-            stopScrolling();
-        }, 100); // If mouse is idle for 100ms, stop scrolling
-    };
-
-    const handleMouseEnter = () => {
-        setIsHovering(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovering(false);
-        stopScrolling();
-        if (mouseMoveTimeoutRef.current) {
-            clearTimeout(mouseMoveTimeoutRef.current);
-        }
-    };
+    const [activeStepIndex, setActiveStepIndex] = useState(0);
+    const activeStep = processSteps[activeStepIndex];
 
     return (
-        <section id="framework" className="section-padding bg-white/20 backdrop-blur-xl overflow-hidden">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12 md:mb-16">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
-                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">My approach to building successful products.</p>
+        <section id="framework" className="section-padding bg-transparent">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-16 md:mb-24">
+                     <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-slate-900">The Framework.</h2>
+                     <p className="mt-4 text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">My methodical approach to building successful, scalable, and user-centric products from concept to completion.</p>
                 </div>
-            </div>
 
-            <div 
-                className="relative"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onMouseMove={handleMouseMove}
-            >
-                <div className="overflow-hidden no-scrollbar" ref={scrollerRef}>
-                    <div className="scroller" data-animated={!isHovering}>
-                        {[...processSteps, ...processSteps].map((step, index) => (
-                           <div key={index} className="w-[85vw] sm:w-[45vw] md:w-[33.33vw] lg:w-[25vw] flex-shrink-0">
-                               <FrameworkCard step={step} onViewDetails={onStepSelect} index={index % processSteps.length} />
-                           </div>
-                        ))}
+                <div className="lg:grid lg:grid-cols-12 lg:gap-16 items-start">
+                    {/* --- Left-side Navigation --- */}
+                    <div className="lg:col-span-4 lg:sticky lg:top-28">
+                        <ul className="flex lg:flex-col gap-2 mb-12 lg:mb-0 overflow-x-auto no-scrollbar">
+                            {processSteps.map((step, index) => (
+                                <li key={step.title} className="flex-shrink-0 lg:flex-shrink">
+                                    <button
+                                        onClick={() => setActiveStepIndex(index)}
+                                        className={`framework-nav-button w-full text-left p-4 rounded-xl border border-transparent ${activeStepIndex === index ? 'active' : ''}`}
+                                        style={activeStepIndex === index ? { '--gradient-color': step.gradientColor } : {}}
+                                    >
+                                        <p className={`text-sm font-semibold ${activeStepIndex === index ? step.accentColor : 'text-slate-500'}`}>{`0${index + 1}`}</p>
+                                        <h3 className={`text-xl font-bold mt-1 ${activeStepIndex === index ? 'text-slate-900' : 'text-slate-700'}`}>{step.title}</h3>
+                                        <p className="text-sm text-slate-500 mt-1">{step.subtitle}</p>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* --- Right-side Content Card --- */}
+                    <div className="lg:col-span-8">
+                        <div className="relative min-h-[450px]">
+                             <div key={activeStepIndex} className="framework-card bg-white p-8 sm:p-12 rounded-2xl shadow-2xl shadow-slate-200/80 border border-slate-200/80">
+                                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-100 mb-8`}>
+                                    <activeStep.icon className={`w-8 h-8 ${activeStep.accentColor}`} />
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tighter">{activeStep.title}</h3>
+                                <p className="mt-6 text-lg text-slate-600 leading-relaxed">
+                                    {activeStep.description}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1038,10 +943,10 @@ const StreamingCarousel = ({ onReadInsight }) => {
 
 
     return (
-        <section id="insights" className="section-padding bg-white/20 backdrop-blur-xl">
+        <section id="insights" className="section-padding bg-transparent">
             <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16 px-4">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Insights</h2>
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">Insights</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology and design.</p>
                 </div>
                 <div className="coverflow-container h-[55vh] md:h-[60vh]">
@@ -1058,7 +963,7 @@ const StreamingCarousel = ({ onReadInsight }) => {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
                                         <div className="coverflow-content">
                                             <h3 className="text-base md:text-xl font-semibold">{item.category}</h3>
-                                            <p className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mt-1">{item.title}</p>
+                                            <p className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tighter mt-1">{item.title}</p>
                                             <button onClick={() => onReadInsight(item)} className="mt-4 md:mt-6 inline-block bg-white text-black font-semibold px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-base hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
                                                 Read Insight
                                             </button>
@@ -1086,9 +991,9 @@ const StreamingCarousel = ({ onReadInsight }) => {
 // --- Testimonials Section ---
 const Testimonials = () => {
     return (
-        <section className="section-padding bg-white/20 backdrop-blur-xl">
+        <section className="section-padding bg-transparent">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tighter text-slate-900">
                     Trusted by Colleagues
                 </h2>
                 <div className="mt-10">
@@ -1139,9 +1044,9 @@ const Contact = () => {
     
     if (state?.succeeded) {
         return (
-            <section id="contact" className="section-padding bg-white/20 backdrop-blur-xl">
+            <section id="contact" className="section-padding bg-transparent">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Thank You!</h2>
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">Thank You!</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Your message has been sent. I'll be in touch with you shortly.</p>
                 </div>
             </section>
@@ -1149,24 +1054,24 @@ const Contact = () => {
     }
 
     return (
-        <section id="contact" className="section-padding bg-white/20 backdrop-blur-xl">
+        <section id="contact" className="section-padding bg-transparent">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Let's build something together.</h2>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">Let's build something together.</h2>
                 <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind? Let's connect.</p>
 
                 <div className="mt-12">
                     <form onSubmit={handleSubmit} action="https://formspree.io/f/xnnvobbj" method="POST" className="space-y-6 text-left">
                         <div>
                             <label htmlFor="name" className="sr-only">Full Name</label>
-                            <input id="name" type="text" name="name" required placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"/>
+                            <input id="name" type="text" name="name" required placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white/80 border border-slate-300/70 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"/>
                         </div>
                         <div>
                             <label htmlFor="email" className="sr-only">Email Address</label>
-                            <input id="email" type="email" name="email" required placeholder="Email Address" className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"/>
+                            <input id="email" type="email" name="email" required placeholder="Email Address" className="w-full px-4 py-3 rounded-lg bg-white/80 border border-slate-300/70 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"/>
                         </div>
                         <div>
                             <label htmlFor="message" className="sr-only">Message</label>
-                            <textarea id="message" name="message" rows="4" required placeholder="Your message..." className="w-full px-4 py-3 rounded-lg bg-white border border-slate-300 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"></textarea>
+                            <textarea id="message" name="message" rows="4" required placeholder="Your message..." className="w-full px-4 py-3 rounded-lg bg-white/80 border border-slate-300/70 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition shadow-sm"></textarea>
                         </div>
                         <div className="text-center">
                             <button type="submit" disabled={state?.submitting} className="text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors transform hover:scale-105 disabled:bg-slate-400 disabled:cursor-not-allowed">
@@ -1210,7 +1115,7 @@ const ScrollToTopButton = () => {
 const Footer = () => {
     const socialLinks = [ { name: 'GitHub', icon: GithubIcon, url: '#' }, { name: 'LinkedIn', icon: LinkedinIcon, url: '#' }, { name: 'Twitter', icon: TwitterIcon, url: '#' }, ];
     return (
-        <footer className="bg-white/20 backdrop-blur-xl">
+        <footer className="bg-transparent">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
                     <p className="text-sm text-slate-500 text-center sm:text-left">&copy; {new Date().getFullYear()} {developerName}. All Rights Reserved.</p>
@@ -1235,10 +1140,9 @@ function AppContent() {
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
     const [selectedInsight, setSelectedInsight] = useState(null);
     const [detailProject, setDetailProject] = useState(null);
-    const [frameworkStep, setFrameworkStep] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject || !!frameworkStep;
+    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject;
 
     useEffect(() => {
         if (anyModalOpen) {
@@ -1342,17 +1246,17 @@ function AppContent() {
                 <main>
                     <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
                         <div className="relative z-10 text-center px-4">
-                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-4">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-slate-900 mb-4">
                                 Engineering <br />Digital Experiences
                             </h1>
-                            <p className="text-xl md:text-2xl font-medium text-slate-500 tracking-wide">
-                                Beyond the hype
+                            <p className="text-xl md:text-2xl font-medium text-slate-600 tracking-wide">
+                                Beyond the hype.
                             </p>
                         </div>
                     </section>
                     
                     <FeaturedWork onProjectSelect={setDetailProject} />
-                    <TheFramework onStepSelect={setFrameworkStep} />
+                    <TheFramework />
                     <StreamingCarousel onReadInsight={setSelectedInsight} />
                     <Testimonials />
                     <Contact />
@@ -1367,7 +1271,6 @@ function AppContent() {
             <AboutModal isOpen={isAboutModalOpen} onClose={() => setAboutModalOpen(false)} />
             <InsightModal insight={selectedInsight} onClose={() => setSelectedInsight(null)} />
             <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
-            <FrameworkDetailModal step={frameworkStep} onClose={() => setFrameworkStep(null)} />
         </>
     );
 }
