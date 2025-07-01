@@ -142,19 +142,6 @@ const GlobalStyles = () => (
             @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             
-            .carousel-slide {
-              grid-column: 1 / -1;
-              grid-row: 1 / -1;
-              opacity: 0;
-              visibility: hidden;
-              transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
-            }
-            .carousel-slide.active {
-              opacity: 1;
-              visibility: visible;
-              transition-delay: 0s;
-            }
-
             .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; padding: 1rem;}
             .modal-overlay.visible { opacity: 1; pointer-events: auto; }
             .modal-content { background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; transform: scale(0.95); transition: transform 0.3s ease-in-out; max-height: 90vh; overflow-y: auto;}
@@ -212,6 +199,15 @@ const GlobalStyles = () => (
             .framework-nav-button.active {
                 background: linear-gradient(180deg, var(--gradient-color) 0%, rgba(255,255,255,0) 100%);
                 box-shadow: 0 4px 20px -5px var(--gradient-color);
+            }
+            
+            /* --- Featured Work Animation --- */
+            @keyframes carousel-fade-in {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            .carousel-item-wrapper {
+                animation: carousel-fade-in 0.4s ease-in-out;
             }
         `}</style>
     </>
@@ -385,86 +381,14 @@ const ProjectDetailModal = ({ project, onClose }) => {
     );
 };
 
-// --- Featured Work Carousel ---
-const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
-    const renderContent = () => {
-        if (project.display === 'tablet') {
-            return (
-                 <div className="relative w-full bg-slate-100 h-0 pb-[75%] md:h-full md:pb-0">
-                    <div className="absolute inset-0 md:p-4 lg:p-8 flex justify-center items-center">
-                        <div className="md:hidden w-full h-full overflow-hidden">
-                            <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full bg-white"></iframe>
-                        </div>
-                        <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
-                            <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                                <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+// --- Featured Work: Refactored Components ---
 
-        if (project.type === 'mobile') {
-             return (
-                 <div className="relative w-full h-full flex items-center justify-center bg-slate-100 p-4 md:p-8">
-                     <div className="hidden md:block">
-                        <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
-                            <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                               <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                     <div className="md:hidden w-full aspect-[9/16] rounded-2xl overflow-hidden border-8 border-slate-800 shadow-xl">
-                         <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full bg-white"></iframe>
-                     </div>
-                 </div>
-             );
-        }
-
-        // Default for 'web' and '3d'
-        return (
-            <div className="relative w-full bg-slate-900 h-0 pb-[56.25%] md:h-full md:pb-0 overflow-hidden">
-                 <iframe 
-                    title={project.title} 
-                    frameBorder="0" 
-                    allowFullScreen 
-                    mozallowfullscreen="true" 
-                    webkitallowfullscreen="true" 
-                    src={project.embedUrl} 
-                    className="absolute top-0 left-0 w-[calc(100%+17px)] h-full bg-white"
-                 ></iframe>
-            </div>
-        );
-    };
-
-    return (
-        <div 
-            className={`md:flex md:h-full transition-transform duration-500 ease-in-out w-full md:w-[calc(100%+350px)] ${isPanelCollapsed ? 'md:-translate-x-[350px]' : 'md:translate-x-0'}`}
-        >
-            {/* Description Panel (Left) */}
-            <div className="hidden md:block flex-shrink-0 bg-white/30 backdrop-blur-lg w-[350px]">
-                <div className="p-6 md:p-8 flex flex-col justify-between h-full w-full">
-                    <div>
-                        <p className="font-semibold text-slate-600">{project.category}</p>
-                        <h3 className="mt-2 text-2xl font-extrabold tracking-tighter text-slate-900">{project.title}</h3>
-                        <p className="mt-4 text-slate-600">{project.description}</p>
-                    </div>
-                    <div className="mt-6 pt-6 border-t border-slate-200/50">
-                        <h4 className="font-semibold text-slate-800">Key Technologies</h4>
-                        <div className="flex flex-wrap gap-2 mt-3">
-                            {project.techStack.map(tech => (
-                                <span key={tech} className="bg-slate-100/80 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Content Panel (Right) */}
-            <div className="relative h-full w-full">
-                {renderContent()}
-                <div className="md:hidden absolute bottom-4 right-4 z-20">
+const MobileCarouselCard = ({ project, onViewDetails }) => (
+    <div className="bg-slate-100/80 backdrop-blur-sm">
+        <div className="p-4">
+            <div className={`relative w-full ${(project.type === 'mobile' || project.mobileDisplay === 'mobile') ? 'aspect-[9/16]' : 'aspect-video'} rounded-2xl overflow-hidden border-4 border-slate-200 shadow-lg mx-auto bg-slate-800`}>
+                <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white" frameBorder="0" allowFullScreen></iframe>
+                <div className="absolute bottom-4 right-4 z-20">
                     <button 
                         onClick={() => onViewDetails(project)}
                         className="bg-white/80 backdrop-blur-sm text-slate-800 rounded-full p-3 shadow-lg hover:bg-white transition-colors"
@@ -475,9 +399,75 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
                 </div>
             </div>
         </div>
+        <div className="p-4 pt-3 text-center">
+            <p className="font-semibold text-slate-600 text-sm">{project.category}</p>
+            <h3 className="mt-1 text-lg font-extrabold text-slate-900 tracking-tighter">{project.title}</h3>
+        </div>
+    </div>
+);
+
+const DesktopContent = ({ project }) => {
+    if (project.display === 'tablet') {
+        return (
+            <div className="relative w-full bg-slate-100 h-full">
+                <div className="absolute inset-0 p-4 lg:p-8 flex justify-center items-center">
+                    <div className="my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
+                        <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                            <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full" frameBorder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    if (project.type === 'mobile') {
+        return (
+            <div className="relative w-full h-full flex items-center justify-center bg-slate-100 p-4 md:p-8">
+                <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
+                    <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
+                        <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full" frameBorder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    return (
+        <div className="relative w-full bg-slate-900 h-full overflow-hidden">
+            <iframe 
+                title={project.title} 
+                frameBorder="0" 
+                allowFullScreen 
+                src={project.embedUrl} 
+                className="absolute top-0 left-0 w-full h-full bg-white"
+            ></iframe>
+        </div>
     );
 };
 
+const DesktopCarouselCard = ({ project, isPanelCollapsed }) => (
+    <div className={`flex h-full transition-transform duration-500 ease-in-out w-full md:w-[calc(100%+350px)] ${isPanelCollapsed ? 'md:-translate-x-[350px]' : 'md:translate-x-0'}`}>
+        <div className="flex-shrink-0 bg-white/30 backdrop-blur-lg w-[350px]">
+            <div className="p-6 md:p-8 flex flex-col justify-between h-full w-full">
+                <div>
+                    <p className="font-semibold text-slate-600">{project.category}</p>
+                    <h3 className="mt-2 text-2xl font-extrabold tracking-tighter text-slate-900">{project.title}</h3>
+                    <p className="mt-4 text-slate-600">{project.description}</p>
+                </div>
+                <div className="mt-6 pt-6 border-t border-slate-200/50">
+                    <h4 className="font-semibold text-slate-800">Key Technologies</h4>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                        {project.techStack.map(tech => (
+                            <span key={tech} className="bg-slate-100/80 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="relative h-full w-full">
+            <DesktopContent project={project} />
+        </div>
+    </div>
+);
 
 const FeaturedWork = ({ onProjectSelect }) => {
     const projects = [
@@ -491,6 +481,7 @@ const FeaturedWork = ({ onProjectSelect }) => {
         },
         { 
             type: 'web', 
+            mobileDisplay: 'mobile',
             category: "FinTech Dashboard", 
             title: "Zenith Analytics", 
             description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
@@ -515,13 +506,14 @@ const FeaturedWork = ({ onProjectSelect }) => {
             techStack: ['Unity', 'C#', 'Blender'],
         },
         { type: 'web', category: "Web Application Showcase", title: "Live Web App", description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", techStack: ['React', 'Next.js', 'Vercel'] },
-
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPanelCollapsed, setIsPanelCollapsed] = useState(true);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
     const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
+
+    const activeProject = projects[currentIndex];
 
     return (
         <section id="work" className="section-padding bg-transparent">
@@ -539,20 +531,17 @@ const FeaturedWork = ({ onProjectSelect }) => {
                     >
                         {isPanelCollapsed ? <ChevronRightIcon className="w-5 h-5" /> : <ChevronLeftIcon className="w-5 h-5" />}
                     </button>
-                    {projects.map((project, index) => (
-                        <div 
-                            key={project.title} 
-                            className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
-                        >
-                           <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200/50 h-full">
-                              <CarouselCard 
-                                  project={project} 
-                                  onViewDetails={onProjectSelect}
-                                  isPanelCollapsed={isPanelCollapsed} 
-                              />
-                           </div>
+                    
+                    <div key={currentIndex} className="carousel-item-wrapper">
+                        <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200/50 h-full">
+                            <div className="md:hidden">
+                                <MobileCarouselCard project={activeProject} onViewDetails={onProjectSelect} />
+                            </div>
+                            <div className="hidden md:block h-full">
+                                <DesktopCarouselCard project={activeProject} isPanelCollapsed={isPanelCollapsed} />
+                            </div>
                         </div>
-                    ))}
+                    </div>
                 </div>
                 
                 <div className="flex justify-center items-center gap-4 mt-8">
