@@ -69,10 +69,80 @@ const GlobalStyles = () => (
                 --c-accent: #334155;
                 --c-accent-light: #f1f5f9;
             }
-            body { font-family: 'Inter', sans-serif; background-color: var(--c-background); color: var(--c-text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
-            .glass-header { background-color: rgba(248, 250, 252, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border); }
-            .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
-            @media (min-width: 1024px) { .section-padding { padding-top: 6rem; padding-bottom: 6rem; } }
+
+            body { 
+                font-family: 'Inter', sans-serif; 
+                color: var(--c-text-primary); 
+                -webkit-font-smoothing: antialiased; 
+                -moz-osx-font-smoothing: grayscale; 
+                scroll-behavior: smooth;
+                background-color: #e2e8f0; /* Fallback color */
+                overflow-x: hidden;
+            }
+
+            .background-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                overflow: hidden;
+            }
+
+            .light-orb {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(100px);
+                opacity: 0.15;
+                will-change: transform;
+            }
+
+            @keyframes move-orb-1 {
+                0% { transform: translate(10vw, -10vh); }
+                25% { transform: translate(60vw, 40vh); }
+                50% { transform: translate(20vw, 80vh); }
+                75% { transform: translate(-20vw, 30vh); }
+                100% { transform: translate(10vw, -10vh); }
+            }
+            @keyframes move-orb-2 {
+                0% { transform: translate(80vw, 20vh); }
+                25% { transform: translate(30vw, 70vh); }
+                50% { transform: translate(70vw, -20vh); }
+                75% { transform: translate(20vw, 10vh); }
+                100% { transform: translate(80vw, 20vh); }
+            }
+            @keyframes move-orb-3 {
+                0% { transform: translate(50vw, 90vh); }
+                25% { transform: translate(-10vw, 10vh); }
+                50% { transform: translate(40vw, 50vh); }
+                75% { transform: translate(90vw, 20vh); }
+                100% { transform: translate(50vw, 90vh); }
+            }
+
+            .light-orb-1 {
+                width: 500px;
+                height: 500px;
+                background-color: #a5b4fc; /* Indigo-300 */
+                animation: move-orb-1 45s linear infinite;
+            }
+            .light-orb-2 {
+                width: 600px;
+                height: 600px;
+                background-color: #f9a8d4; /* Pink-300 */
+                animation: move-orb-2 55s linear infinite;
+            }
+             .light-orb-3 {
+                width: 450px;
+                height: 450px;
+                background-color: #93c5fd; /* Blue-300 */
+                animation: move-orb-3 50s linear infinite;
+            }
+
+
+            .glass-header { background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.5); }
+            .section-padding { padding-top: 6rem; padding-bottom: 6rem; }
+            @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
             .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             
             .carousel-slide {
@@ -94,17 +164,6 @@ const GlobalStyles = () => (
             @media (min-width: 640px) { .modal-content { padding: 2rem; } }
             .modal-overlay.visible .modal-content { transform: scale(1); }
             
-            .framework-item {
-                opacity: 0;
-                transform: translateY(50px);
-                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            }
-
-            .framework-item.is-visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
             .framework-card {
                 background-color: rgba(255, 255, 255, 0.7);
                 backdrop-filter: blur(16px);
@@ -120,21 +179,6 @@ const GlobalStyles = () => (
                 }
             }
             
-            .timeline-dot {
-                background-color: var(--c-surface);
-                border: 2px solid var(--c-border);
-                color: var(--c-text-secondary);
-                font-weight: 600;
-                transition: all 0.5s ease;
-                transform: scale(1);
-            }
-            .framework-item.is-visible .timeline-dot {
-                background-color: var(--c-accent);
-                border-color: var(--c-accent);
-                color: white;
-                transform: scale(1.1);
-                box-shadow: 0 0 0 6px rgba(51, 65, 85, 0.1);
-            }
              .icon-container {
                 background: radial-gradient(circle, #ffffff 60%, #f1f5f9 100%);
                 box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
@@ -160,14 +204,6 @@ const GlobalStyles = () => (
                 position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
                 color: white; opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
             }
-
-            /* --- Mobile Overrides --- */
-            @media (max-width: 767px) {
-                .framework-timeline::before { content: none; }
-                .framework-step { flex-direction: column !important; align-items: stretch !important; margin-bottom: 2rem; }
-                .framework-step > div { width: 100% !important; }
-                .timeline-dot-container { display: none; }
-            }
             
             /* --- Modal Open Effect --- */
             #page-wrapper {
@@ -180,11 +216,37 @@ const GlobalStyles = () => (
                     --c-text-secondary: #fcd34d; /* yellow-300 */
                 }
             }
+
+            @keyframes infinite-scroll {
+                from { transform: translateX(0); }
+                to { transform: translateX(-100%); }
+            }
+
+            .scroller {
+                display: flex;
+                width: max-content;
+            }
+            
+            .scroller[data-animated="true"] {
+                 animation: infinite-scroll 80s linear infinite;
+            }
+
+            .scroller[data-animated="true"]:hover {
+                animation-play-state: paused;
+            }
         `}</style>
     </>
 );
 
-// --- Global Constants & Icons ---
+// --- Global Components ---
+const BackgroundEffects = () => (
+    <div className="background-container">
+        <div className="light-orb light-orb-1"></div>
+        <div className="light-orb light-orb-2"></div>
+        <div className="light-orb light-orb-3"></div>
+    </div>
+);
+
 const developerName = "Robert McQva";
 const LogoIcon = ({ className }) => (<svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 26V6H15.5C18.5376 6 21 8.46243 21 11.5V11.5C21 14.5376 18.5376 17 15.5 17H11.5L16.5 26H8Z" fill="currentColor"/><path d="M15 6L24 6L20 17L24 26H15L11.5 17L15 6Z" fill="currentColor" fillOpacity="0.7"/></svg>);
 const GithubIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>;
@@ -344,8 +406,32 @@ const ProjectDetailModal = ({ project, onClose }) => {
     );
 };
 
+const FrameworkDetailModal = ({ step, onClose }) => {
+    if (!step) return null;
+
+    return (
+        <div className={`modal-overlay visible`} onClick={onClose}>
+            <div className="modal-content max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-end -mt-2 -mr-2">
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
+                </div>
+                 <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center icon-container flex-shrink-0">
+                        <step.icon className="w-7 h-7 text-slate-500" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold">{step.title}</h2>
+                </div>
+                <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed">
+                   {step.detailedDescription}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 // --- Featured Work Carousel ---
-const CarouselCard = ({ project, onViewDetails }) => {
+const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
     const renderContent = () => {
         if (project.display === 'tablet') {
             return (
@@ -397,13 +483,31 @@ const CarouselCard = ({ project, onViewDetails }) => {
         );
     };
 
-    const isThinLayout = project.layout === 'thin';
-    const desktopContentClasses = isThinLayout ? 'md:col-span-9 lg:col-span-10' : 'md:col-span-7';
-    const desktopDescriptionClasses = isThinLayout ? 'md:col-span-3 lg:col-span-2' : 'md:col-span-5';
-
     return (
-        <div className="md:grid md:grid-cols-12 md:h-full">
-            <div className={`relative ${desktopContentClasses} md:h-full`}>
+        <div 
+            className={`md:flex md:h-full transition-transform duration-500 ease-in-out w-full md:w-[calc(100%+350px)] ${isPanelCollapsed ? 'md:-translate-x-[350px]' : 'md:translate-x-0'}`}
+        >
+            {/* Description Panel (Left) */}
+            <div className="hidden md:block flex-shrink-0 bg-white/30 backdrop-blur-lg w-[350px]">
+                <div className="p-6 md:p-8 flex flex-col justify-between h-full w-full">
+                    <div>
+                        <p className="font-semibold text-slate-600">{project.category}</p>
+                        <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
+                        <p className="mt-4 text-slate-600">{project.description}</p>
+                    </div>
+                    <div className="mt-6 pt-6 border-t border-slate-200/50">
+                        <h4 className="font-semibold text-slate-800">Key Technologies</h4>
+                        <div className="flex flex-wrap gap-2 mt-3">
+                            {project.techStack.map(tech => (
+                                <span key={tech} className="bg-slate-100/80 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Content Panel (Right) */}
+            <div className="relative h-full w-full">
                 {renderContent()}
                 <div className="md:hidden absolute bottom-4 right-4 z-20">
                     <button 
@@ -413,23 +517,6 @@ const CarouselCard = ({ project, onViewDetails }) => {
                     >
                         <InfoIcon className="w-5 h-5" />
                     </button>
-                </div>
-            </div>
-            <div className={`hidden ${desktopDescriptionClasses} md:flex flex-col`}>
-                 <div className="bg-white p-6 md:p-8 flex flex-col justify-between h-full">
-                    <div>
-                        <p className="font-semibold text-slate-600">{project.category}</p>
-                        <h3 className="mt-2 text-2xl font-extrabold text-slate-900 tracking-tight">{project.title}</h3>
-                        <p className="mt-4 text-slate-600">{project.description}</p>
-                    </div>
-                    <div className="mt-6 pt-6 border-t border-slate-200">
-                        <h4 className="font-semibold text-slate-800">Key Technologies</h4>
-                        <div className="flex flex-wrap gap-2 mt-3">
-                            {project.techStack.map(tech => (
-                                <span key={tech} className="bg-slate-100 text-slate-700 text-sm font-medium px-3 py-1 rounded-full">{tech}</span>
-                            ))}
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -446,7 +533,6 @@ const FeaturedWork = ({ onProjectSelect }) => {
             description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
             embedUrl: "https://zenith-sand.vercel.app/", 
             techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
-            layout: 'thin'
         },
         { 
             type: 'web', 
@@ -455,7 +541,6 @@ const FeaturedWork = ({ onProjectSelect }) => {
             description: "A visually-driven, animated website for a modern creative agency, focusing on fluid user experience and brand storytelling.", 
             embedUrl: "https://aura-three-opal.vercel.app/", 
             techStack: ['React', 'Next.js', 'GSAP', 'Tailwind'],
-            layout: 'thin'
         },
         { 
             type: 'mobile', 
@@ -473,32 +558,43 @@ const FeaturedWork = ({ onProjectSelect }) => {
             description: "A high-fidelity 3D model integrated into a real-time game engine, featuring custom physics and interactive components.", 
             embedUrl: "https://sketchfab.com/models/1b63ea01e6f443cdad5fec3d366d8cf1/embed?autostart=1&ui_theme=dark&transparent=1&ui_controls=0&ui_infos=0", 
             techStack: ['Unity', 'C#', 'Blender'],
-            layout: 'thin' 
         },
         { type: 'web', category: "Web Application Showcase", title: "Live Web App", description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", techStack: ['React', 'Next.js', 'Vercel'] },
 
     ];
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPanelCollapsed, setIsPanelCollapsed] = useState(true);
 
     const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? projects.length - 1 : prev - 1));
     const handleNext = () => setCurrentIndex(prev => (prev === projects.length - 1 ? 0 : prev + 1));
 
     return (
-        <section id="work" className="section-padding bg-white">
+        <section id="work" className="section-padding bg-white/20 backdrop-blur-xl">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Work</h2>
-                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A curated selection of projects, each demonstrating a unique technical challenge and solution.</p>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Curated projects showcasing unique solutions.</p>
                 </div>
 
-                <div className="grid md:min-h-[660px]">
+                <div className="grid md:min-h-[660px] relative group">
+                    <button
+                        onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 hidden md:block bg-slate-900/80 backdrop-blur-sm text-white rounded-full p-2 shadow-lg hover:bg-slate-700 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                        aria-label="Toggle details panel"
+                    >
+                        {isPanelCollapsed ? <ChevronRightIcon className="w-5 h-5" /> : <ChevronLeftIcon className="w-5 h-5" />}
+                    </button>
                     {projects.map((project, index) => (
                         <div 
                             key={project.title} 
                             className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
                         >
-                           <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200 h-full">
-                              <CarouselCard project={project} onViewDetails={onProjectSelect} />
+                           <div className="rounded-2xl shadow-xl overflow-hidden border border-slate-200/50 h-full">
+                              <CarouselCard 
+                                  project={project} 
+                                  onViewDetails={onProjectSelect}
+                                  isPanelCollapsed={isPanelCollapsed} 
+                              />
                            </div>
                         </div>
                     ))}
@@ -515,78 +611,143 @@ const FeaturedWork = ({ onProjectSelect }) => {
 
 
 // --- The Framework Section ---
-const FrameworkStep = ({ step, index }) => {
-    const itemRef = useRef(null);
-
-    useEffect(() => {
-        const currentRef = itemRef.current;
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        if (currentRef) {
-            observer.observe(currentRef);
-        }
-
-        return () => {
-            if (observer && currentRef) {
-                observer.unobserve(currentRef);
-            }
-        };
-    }, []);
-
-    const isEven = index % 2 === 0;
-    
+const FrameworkCard = ({ step, onViewDetails, index }) => {
     return (
-        <div ref={itemRef} className={`framework-item framework-step group relative flex items-start md:items-center space-y-4 md:space-y-0 md:space-x-8 ${isEven ? '' : 'md:flex-row-reverse md:space-x-reverse'}`}>
-             <div className="w-full md:w-[calc(50%-2.5rem)]">
-                 <div className="relative p-6 md:p-8 rounded-2xl framework-card shadow-lg">
-                    <div className="relative z-10">
-                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center icon-container mb-6">
-                            <step.icon className="w-7 h-7 md:w-8 md:h-8 text-slate-500" />
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-900">{step.title}</h3>
-                        <p className="mt-3 text-slate-600 leading-relaxed">{step.description}</p>
-                    </div>
+        <div className="h-full p-2">
+            <div className="relative p-8 rounded-2xl framework-card shadow-lg h-full flex flex-col text-center overflow-hidden">
+                <div className="absolute top-4 right-4">
+                    <button onClick={() => onViewDetails(step)} className="p-2 rounded-full hover:bg-slate-200/50 transition-colors" aria-label="Learn more about this step">
+                        <InfoIcon className="w-5 h-5 text-slate-500"/>
+                    </button>
                 </div>
-            </div>
-            <div className="timeline-dot-container hidden md:flex w-20 h-full absolute top-0 left-1/2 -translate-x-1/2 items-center justify-center">
-                 <div className="timeline-dot w-10 h-10 rounded-full flex items-center justify-center text-sm">
-                   0{index+1}
+                <div className="flex-grow flex flex-col justify-center items-center">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center icon-container mb-6">
+                        <step.icon className="w-8 h-8 text-slate-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900">{step.title}</h3>
+                    <p className="mt-3 text-slate-600 leading-relaxed">{step.description}</p>
                 </div>
             </div>
         </div>
     );
 };
 
-const TheFramework = () => {
+const TheFramework = ({ onStepSelect }) => {
     const processSteps = [
-        { icon: CompassIcon, title: "Discover", description: "I start by deeply understanding the core problem, user needs, and business goals to ensure the project is set up for success from day one." },
-        { icon: LayersIcon, title: "Design", description: "Next, I architect a robust solution, planning everything from the user interface and experience to the underlying system and data architecture." },
-        { icon: CodeIcon, title: "Develop", description: "With a solid plan, I build, test, and iterate on the product, writing clean, efficient, and scalable code while ensuring quality at every stage." },
-        { icon: CloudUploadIcon, title: "Deploy", description: "I ensure a seamless launch by managing deployment pipelines, monitoring performance, and gathering feedback for future iterations." },
-        { icon: SyncIcon, title: "Evolve", description: "The launch is just the beginning. I monitor performance, gather user feedback, and use data-driven insights to inform the next cycle of improvements and features." }
+        { 
+            icon: CompassIcon, 
+            title: "Discover", 
+            description: "Deeply understanding the problem, users, and goals.",
+            detailedDescription: "The initial phase is all about deep immersion. I conduct stakeholder interviews, user research, and competitive analysis to build a comprehensive understanding of the project's context, challenges, and opportunities. The goal is to define a clear problem statement and establish measurable success metrics that align user needs with business objectives."
+        },
+        { 
+            icon: LayersIcon, 
+            title: "Design", 
+            description: "Architecting robust solutions, from UI to system design.",
+            detailedDescription: "With a clear strategy, I move to architecting the solution. This involves creating user flow diagrams, wireframes, and high-fidelity prototypes to map out the user experience. Simultaneously, I design a scalable and maintainable system architecture, planning the data models, API contracts, and technology stack that will form the foundation of the product."
+        },
+        { 
+            icon: CodeIcon, 
+            title: "Develop", 
+            description: "Building, testing, and iterating with clean, scalable code.",
+            detailedDescription: "This is where the vision comes to life. Working in agile sprints, I write clean, efficient, and well-documented code. I practice test-driven development and implement continuous integration pipelines to ensure code quality and stability. Regular code reviews and iterative feedback loops are crucial to this process."
+        },
+        { 
+            icon: CloudUploadIcon, 
+            title: "Deploy", 
+            description: "Managing deployment, monitoring performance, and gathering feedback.",
+            detailedDescription: "A seamless launch is critical. I establish automated CI/CD (Continuous Integration/Continuous Deployment) pipelines to make deployments predictable and reliable. I configure cloud infrastructure for scalability and security, implement robust monitoring and logging to track application health, and perform final quality assurance checks before going live."
+        },
+        { 
+            icon: SyncIcon, 
+            title: "Evolve", 
+            description: "Evolving the product with data-driven insights.",
+            detailedDescription: "The project doesn't end at launch. I continuously monitor application performance, user engagement, and key business metrics. By analyzing this data and gathering direct user feedback, I identify opportunities for improvement and plan the next cycle of feature enhancements, ensuring the product evolves and continues to deliver value over time."
+        }
     ];
 
-    return (
-        <section id="framework" className="section-padding bg-slate-50 overflow-hidden">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12 md:mb-20">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
-                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">A disciplined, end-to-end approach to building successful digital products.</p>
-                </div>
+    const scrollerRef = useRef(null);
+    const scrollIntervalRef = useRef(null);
+    const mouseMoveTimeoutRef = useRef(null);
+    const [isHovering, setIsHovering] = useState(false);
 
-                <div className="relative framework-timeline">
-                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-slate-200 hidden md:block" aria-hidden="true"></div>
-                    <div className="space-y-12 md:space-y-24">
-                        {processSteps.map((step, index) => (
-                            <FrameworkStep key={index} step={step} index={index} />
+    const startScrolling = (speed) => {
+        if (scrollIntervalRef.current) clearInterval(scrollIntervalRef.current);
+        scrollIntervalRef.current = setInterval(() => {
+            if (scrollerRef.current) {
+                scrollerRef.current.scrollLeft += speed;
+            }
+        }, 10);
+    };
+
+    const stopScrolling = () => {
+        if (scrollIntervalRef.current) {
+            clearInterval(scrollIntervalRef.current);
+            scrollIntervalRef.current = null;
+        }
+    };
+
+    const handleMouseMove = (e) => {
+        if (!scrollerRef.current) return;
+
+        if (mouseMoveTimeoutRef.current) {
+            clearTimeout(mouseMoveTimeoutRef.current);
+        }
+
+        const { left, width } = scrollerRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - left;
+        const scrollSpeed = 2;
+        const deadZone = 0.4; // 40% of the container width in the middle is a dead zone
+
+        const leftActivationZoneEnd = (width * (1 - deadZone)) / 2;
+        const rightActivationZoneStart = width - leftActivationZoneEnd;
+
+        if (mouseX < leftActivationZoneEnd) {
+            startScrolling(-scrollSpeed);
+        } else if (mouseX > rightActivationZoneStart) {
+            startScrolling(scrollSpeed);
+        } else {
+            stopScrolling();
+        }
+
+        mouseMoveTimeoutRef.current = setTimeout(() => {
+            stopScrolling();
+        }, 100); // If mouse is idle for 100ms, stop scrolling
+    };
+
+    const handleMouseEnter = () => {
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovering(false);
+        stopScrolling();
+        if (mouseMoveTimeoutRef.current) {
+            clearTimeout(mouseMoveTimeoutRef.current);
+        }
+    };
+
+    return (
+        <section id="framework" className="section-padding bg-white/20 backdrop-blur-xl overflow-hidden">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12 md:mb-16">
+                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">My approach to building successful products.</p>
+                </div>
+            </div>
+
+            <div 
+                className="relative"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onMouseMove={handleMouseMove}
+            >
+                <div className="overflow-hidden no-scrollbar" ref={scrollerRef}>
+                    <div className="scroller" data-animated={!isHovering}>
+                        {[...processSteps, ...processSteps].map((step, index) => (
+                           <div key={index} className="w-[85vw] sm:w-[45vw] md:w-[33.33vw] lg:w-[25vw] flex-shrink-0">
+                               <FrameworkCard step={step} onViewDetails={onStepSelect} index={index % processSteps.length} />
+                           </div>
                         ))}
                     </div>
                 </div>
@@ -594,6 +755,7 @@ const TheFramework = () => {
         </section>
     );
 };
+
 
 // --- Streaming Carousel (Coverflow Effect) ---
 const StreamingCarousel = ({ onReadInsight }) => {
@@ -876,11 +1038,11 @@ const StreamingCarousel = ({ onReadInsight }) => {
 
 
     return (
-        <section id="insights" className="bg-white py-16 sm:py-24" onMouseEnter={stopAutoplay} onMouseLeave={startAutoplay}>
+        <section id="insights" className="section-padding bg-white/20 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
                 <div className="text-center mb-12 md:mb-16 px-4">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Insights</h2>
-                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology, design, and development.</p>
+                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology and design.</p>
                 </div>
                 <div className="coverflow-container h-[55vh] md:h-[60vh]">
                     <div 
@@ -924,7 +1086,7 @@ const StreamingCarousel = ({ onReadInsight }) => {
 // --- Testimonials Section ---
 const Testimonials = () => {
     return (
-        <section className="section-padding bg-white">
+        <section className="section-padding bg-white/20 backdrop-blur-xl">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">
                     Trusted by Colleagues
@@ -977,7 +1139,7 @@ const Contact = () => {
     
     if (state?.succeeded) {
         return (
-            <section id="contact" className="section-padding">
+            <section id="contact" className="section-padding bg-white/20 backdrop-blur-xl">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Thank You!</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Your message has been sent. I'll be in touch with you shortly.</p>
@@ -987,10 +1149,10 @@ const Contact = () => {
     }
 
     return (
-        <section id="contact" className="section-padding">
+        <section id="contact" className="section-padding bg-white/20 backdrop-blur-xl">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Let's build something together.</h2>
-                <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind or just want to connect? I'd love to hear from you.</p>
+                <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Have a project in mind? Let's connect.</p>
 
                 <div className="mt-12">
                     <form onSubmit={handleSubmit} action="https://formspree.io/f/xnnvobbj" method="POST" className="space-y-6 text-left">
@@ -1048,7 +1210,7 @@ const ScrollToTopButton = () => {
 const Footer = () => {
     const socialLinks = [ { name: 'GitHub', icon: GithubIcon, url: '#' }, { name: 'LinkedIn', icon: LinkedinIcon, url: '#' }, { name: 'Twitter', icon: TwitterIcon, url: '#' }, ];
     return (
-        <footer className="bg-white">
+        <footer className="bg-white/20 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
                     <p className="text-sm text-slate-500 text-center sm:text-left">&copy; {new Date().getFullYear()} {developerName}. All Rights Reserved.</p>
@@ -1073,9 +1235,10 @@ function AppContent() {
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
     const [selectedInsight, setSelectedInsight] = useState(null);
     const [detailProject, setDetailProject] = useState(null);
+    const [frameworkStep, setFrameworkStep] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject;
+    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject || !!frameworkStep;
 
     useEffect(() => {
         if (anyModalOpen) {
@@ -1125,7 +1288,8 @@ function AppContent() {
     return (
         <>
             <GlobalStyles />
-            <div id="page-wrapper">
+            <BackgroundEffects />
+            <div id="page-wrapper" className="relative z-10">
                 <header className="fixed top-0 left-0 right-0 z-50 glass-header">
                     <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
                         <a href="#" onClick={(e) => {e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'})}} aria-label="Home">
@@ -1177,22 +1341,18 @@ function AppContent() {
 
                 <main>
                     <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
-                        <div className="absolute inset-0 z-0 opacity-20">
-                            <div className="w-72 h-72 md:w-96 md:h-96 bg-slate-200 rounded-full absolute -top-20 -left-20 filter blur-3xl"></div>
-                            <div className="w-64 h-64 md:w-80 md:h-80 bg-gray-200 rounded-full absolute -bottom-20 -right-20 filter blur-3xl"></div>
-                        </div>
                         <div className="relative z-10 text-center px-4">
                             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
                                 Engineering <br />Digital Experiences
                             </h1>
                             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                                A showcase of full-stack development, AI integration, and user-centric design.
+                                Full-stack development & user-centric design.
                             </p>
                         </div>
                     </section>
                     
                     <FeaturedWork onProjectSelect={setDetailProject} />
-                    <TheFramework />
+                    <TheFramework onStepSelect={setFrameworkStep} />
                     <StreamingCarousel onReadInsight={setSelectedInsight} />
                     <Testimonials />
                     <Contact />
@@ -1207,6 +1367,7 @@ function AppContent() {
             <AboutModal isOpen={isAboutModalOpen} onClose={() => setAboutModalOpen(false)} />
             <InsightModal insight={selectedInsight} onClose={() => setSelectedInsight(null)} />
             <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
+            <FrameworkDetailModal step={frameworkStep} onClose={() => setFrameworkStep(null)} />
         </>
     );
 }
