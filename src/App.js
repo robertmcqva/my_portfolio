@@ -7,19 +7,24 @@ import {
     signInWithEmailAndPassword, 
     signOut,
     GoogleAuthProvider,
-    signInWithPopup
+    OAuthProvider,
+    signInWithPopup,
+    signInAnonymously,
+    signInWithCustomToken
 } from 'firebase/auth';
 
 // --- Firebase Configuration ---
-// IMPORTANT: Replace this with your own Firebase project configuration.
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+// This will be populated by the environment variable in production.
+const firebaseConfig = typeof __firebase_config !== 'undefined' 
+    ? JSON.parse(__firebase_config)
+    : {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
 
 
 // --- Initialize Firebase ---
@@ -34,9 +39,23 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            setCurrentUser(user);
-            setLoading(false);
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setCurrentUser(user);
+                setLoading(false);
+            } else {
+                 // Handle initial sign-in if no user is found
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Initial sign-in failed:", error);
+                    setLoading(false); // Ensure loading completes even on error
+                }
+            }
         });
         return unsubscribe;
     }, []);
@@ -45,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };
@@ -53,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => useContext(AuthContext);
 
 
-// --- Foundational Styles & Fonts ---
+// --- Foundational Styles & Fonts (Apple Design-Inspired) ---
 const GlobalStyles = () => (
     <>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,22 +80,22 @@ const GlobalStyles = () => (
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         <style>{`
             :root {
-                --c-background: #f8fafc;
+                --c-background: #f9f9f9;
                 --c-surface: #FFFFFF;
-                --c-text-primary: #1e293b;
-                --c-text-secondary: #64748b;
-                --c-border: #e2e8f0;
-                --c-accent: #334155;
-                --c-accent-light: #f1f5f9;
+                --c-text-primary: #1d1d1f;
+                --c-text-secondary: #6e6e73;
+                --c-border: #d2d2d7;
+                --c-accent: #007aff;
+                --c-accent-light: #f5f5f7;
             }
 
             body { 
-                font-family: 'Inter', sans-serif; 
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
                 color: var(--c-text-primary); 
                 -webkit-font-smoothing: antialiased; 
                 -moz-osx-font-smoothing: grayscale; 
                 scroll-behavior: smooth;
-                background-color: #f8fafc; /* Updated background */
+                background-color: var(--c-background);
                 overflow-x: hidden;
             }
 
@@ -93,99 +112,134 @@ const GlobalStyles = () => (
             .light-orb {
                 position: absolute;
                 border-radius: 50%;
-                filter: blur(120px);
-                opacity: 0.1;
+                filter: blur(150px);
+                opacity: 0.08;
                 will-change: transform;
             }
 
             @keyframes move-orb-1 {
-                0% { transform: translate(10vw, -10vh) scale(1); }
-                25% { transform: translate(60vw, 40vh) scale(1.2); }
-                50% { transform: translate(20vw, 80vh) scale(0.9); }
-                75% { transform: translate(-20vw, 30vh) scale(1.1); }
-                100% { transform: translate(10vw, -10vh) scale(1); }
+                0% { transform: translate(10vw, -20vh) scale(1); }
+                50% { transform: translate(70vw, 50vh) scale(1.3); }
+                100% { transform: translate(10vw, -20vh) scale(1); }
             }
             @keyframes move-orb-2 {
-                0% { transform: translate(80vw, 20vh) scale(1); }
-                25% { transform: translate(30vw, 70vh) scale(0.8); }
-                50% { transform: translate(70vw, -20vh) scale(1.2); }
-                75% { transform: translate(20vw, 10vh) scale(1); }
-                100% { transform: translate(80vw, 20vh) scale(1); }
+                0% { transform: translate(80vw, 30vh) scale(1.2); }
+                50% { transform: translate(20vw, 80vh) scale(0.9); }
+                100% { transform: translate(80vw, 30vh) scale(1.2); }
             }
             @keyframes move-orb-3 {
-                0% { transform: translate(50vw, 90vh) scale(1.1); }
-                25% { transform: translate(-10vw, 10vh) scale(0.9); }
-                50% { transform: translate(40vw, 50vh) scale(1); }
-                75% { transform: translate(90vw, 20vh) scale(1.2); }
-                100% { transform: translate(50vw, 90vh) scale(1.1); }
+                0% { transform: translate(40vw, 100vh) scale(1.1); }
+                50% { transform: translate(90vw, 10vh) scale(1.2); }
+                100% { transform: translate(40vw, 100vh) scale(1.1); }
             }
 
-            .light-orb-1 { width: 600px; height: 600px; background-color: #a5b4fc; animation: move-orb-1 50s linear infinite; }
-            .light-orb-2 { width: 700px; height: 700px; background-color: #f9a8d4; animation: move-orb-2 60s linear infinite; }
-            .light-orb-3 { width: 550px; height: 550px; background-color: #93c5fd; animation: move-orb-3 55s linear infinite; }
+            .light-orb-1 { width: 700px; height: 700px; background-color: #647eff; animation: move-orb-1 70s linear infinite; }
+            .light-orb-2 { width: 800px; height: 800px; background-color: #ff7f50; animation: move-orb-2 80s linear infinite; }
+            .light-orb-3 { width: 650px; height: 650px; background-color: #50c878; animation: move-orb-3 75s linear infinite; }
 
-            .glass-header { background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.7); }
-            .section-padding { padding-top: 6rem; padding-bottom: 6rem; }
-            @media (min-width: 1024px) { .section-padding { padding-top: 8rem; padding-bottom: 8rem; } }
-            .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            .glass-header { 
+                background-color: rgba(251, 251, 251, 0.8); 
+                backdrop-filter: saturate(180%) blur(20px);
+                -webkit-backdrop-filter: saturate(180%) blur(20px);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            }
+            .section-padding { padding-top: 7rem; padding-bottom: 7rem; }
+            @media (min-width: 1024px) { .section-padding { padding-top: 9rem; padding-bottom: 9rem; } }
             
-            .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; padding: 1rem;}
+            .modal-overlay { 
+                position: fixed; inset: 0; 
+                background-color: rgba(0,0,0,0.4); 
+                display: flex; align-items: center; justify-content: center; 
+                z-index: 1000; opacity: 0; 
+                transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                pointer-events: none; padding: 1rem;
+            }
             .modal-overlay.visible { opacity: 1; pointer-events: auto; }
-            .modal-content { background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; transform: scale(0.95); transition: transform 0.3s ease-in-out; max-height: 90vh; overflow-y: auto;}
+            .modal-content { 
+                background: var(--c-surface); 
+                border-radius: 1.25rem; 
+                padding: 1.5rem; width: 100%; 
+                transform: translateY(20px) scale(0.98); 
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+                max-height: 90vh; overflow-y: auto;
+                box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            }
             @media (min-width: 640px) { .modal-content { padding: 2rem; } }
-            .modal-overlay.visible .modal-content { transform: scale(1); }
+            .modal-overlay.visible .modal-content { transform: translateY(0) scale(1); }
             
-            #page-wrapper { transition: filter 0.3s ease-in-out; }
-            body.modal-open #page-wrapper { filter: blur(4px); }
+            #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
+            body.modal-open #page-wrapper { filter: blur(8px); transform: scale(0.99); }
             
-            @keyframes carousel-fade-in { from { opacity: 0; } to { opacity: 1; } }
-            .carousel-item-wrapper { animation: carousel-fade-in 0.4s ease-in-out; }
-
-            /* --- NEW Framework Section Styles --- */
             .framework-item {
                 opacity: 0;
-                transform: translateY(50px);
-                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+                transform: translateY(40px);
+                transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             }
             .framework-item.is-visible {
                 opacity: 1;
                 transform: translateY(0);
             }
             .framework-card {
-                background-color: rgba(255, 255, 255, 0.7);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid #ffffff;
-                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+                background-color: var(--c-surface);
+                border: 1px solid var(--c-border);
+                transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                border-radius: 1.5rem;
+                box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
             }
             .framework-card:hover {
-                transform: translateY(-10px) scale(1.03);
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15);
             }
             .timeline-dot {
                 background-color: var(--c-surface);
                 border: 2px solid var(--c-border);
                 color: var(--c-text-secondary);
                 font-weight: 600;
-                transition: all 0.5s ease;
+                transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
                 transform: scale(1);
             }
             .framework-item.is-visible .timeline-dot {
-                background-color: var(--c-accent);
-                border-color: var(--c-accent);
+                background-color: var(--c-text-primary);
+                border-color: var(--c-text-primary);
                 color: white;
                 transform: scale(1.1);
-                box-shadow: 0 0 0 6px rgba(51, 65, 85, 0.1);
+                box-shadow: 0 0 0 6px rgba(29, 29, 31, 0.1);
             }
             .icon-container {
-                background: radial-gradient(circle, #ffffff 60%, #f1f5f9 100%);
-                box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+                background: linear-gradient(145deg, #ffffff, #e6e6e6);
+                box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.03);
+            }
+            
+            /* --- Loading Spinner --- */
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: var(--c-background);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+            }
+            @keyframes spin { to { transform: rotate(360deg); } }
+            .spinner {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                border: 6px solid var(--c-border);
+                border-top-color: var(--c-text-primary);
+                animation: spin 0.8s linear infinite;
             }
         `}</style>
     </>
 );
 
 // --- Global Components ---
+const LoadingSpinner = () => (
+    <div className="loading-overlay">
+        <div className="spinner" aria-label="Loading content"></div>
+    </div>
+);
+
 const BackgroundEffects = () => (
     <div className="background-container">
         <div className="light-orb light-orb-1"></div>
@@ -208,7 +262,7 @@ const LogOutIcon = ({className}) => <svg className={className} xmlns="http://www
 const MenuIcon = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
 const InfoIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>;
 
-// --- NEW/UPDATED Icons for Framework Section ---
+// --- Icons for Framework Section ---
 const CompassIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>;
 const FrameworkLayersIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
 const FrameworkCodeIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>;
@@ -239,6 +293,15 @@ const AuthModal = ({ isOpen, onClose }) => {
             await signInWithPopup(auth, new GoogleAuthProvider());
             onClose();
         } catch(err) { setError(err.message); }
+    };
+
+    const handleAppleSignIn = async () => {
+        setError('');
+        try {
+            const provider = new OAuthProvider('apple.com');
+            await signInWithPopup(auth, provider);
+            onClose();
+        } catch(err) { setError(err.message); }
     }
 
     if (!isOpen) return null;
@@ -248,7 +311,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             <div className="modal-content max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold tracking-tighter">{isLoginView ? 'Sign In' : 'Create Account'}</h2>
-                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100" aria-label="Close modal"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
                 {error && <p className="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm">{error}</p>}
                 <form onSubmit={handleAuthAction} className="space-y-4">
@@ -257,10 +320,16 @@ const AuthModal = ({ isOpen, onClose }) => {
                     <button type="submit" className="w-full text-lg font-bold bg-slate-900 text-white px-8 py-3 rounded-lg hover:bg-slate-700 transition-colors">{isLoginView ? 'Sign In' : 'Sign Up'}</button>
                 </form>
                 <div className="flex items-center my-4"><hr className="flex-grow border-slate-200"/><span className="px-2 text-slate-500 text-sm">OR</span><hr className="flex-grow border-slate-200"/></div>
-                <button onClick={handleGoogleSignIn} className="w-full flex items-center justify-center gap-2 py-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
-                    <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.574l6.19 5.238C42.012 36.49 44 31.134 44 24c0-1.341-.138-2.65-.389-3.917z"></path></svg>
-                    Sign in with Google
-                </button>
+                <div className="space-y-3">
+                    <button onClick={handleAppleSignIn} aria-label="Sign in with Apple" className="w-full flex items-center justify-center gap-2 py-3 border bg-black text-white rounded-lg hover:bg-gray-800 transition-colors">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 16"><path d="M8.28,1.5c-0.68,0-1.4,0.42-1.85,1.11c-0.49,0.75-1.2,2.06-0.68,3.25c0.63,1.44,1.88,1.91,2.53,1.91c0.64,0,1.33-0.43,1.85-1.12c0.54-0.75,0.83-1.94,0.29-3.13C10.05,1.93,9.03,1.5,8.28,1.5z M9.73,10.33c-0.23,0.67-0.6,1.25-1.07,1.72c-0.53,0.54-1.05,1.13-1.81,1.13c-0.75,0-1.22-0.54-1.85-0.54c-0.64,0-1.25,0.53-1.87,0.53c-0.7,0-1.32-0.52-1.74-1.2c-0.84-1.38-0.6-3.88,0.89-5.32c0.6-0.56,1.29-0.9,2.09-0.9c0.72,0,1.27,0.48,1.81,0.48c0.53,0,1.21-0.51,1.95-0.51c0.81,0,1.38,0.4,1.81,0.85c-1.17,0.71-1.84,2.05-1.41,3.48V10.33z"></path></svg>
+                        Sign in with Apple
+                    </button>
+                     <button onClick={handleGoogleSignIn} aria-label="Sign in with Google" className="w-full flex items-center justify-center gap-2 py-3 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.574l6.19 5.238C42.012 36.49 44 31.134 44 24c0-1.341-.138-2.65-.389-3.917z"></path></svg>
+                        Sign in with Google
+                    </button>
+                </div>
                 <p className="text-center text-sm text-slate-600 mt-6">{isLoginView ? "Don't have an account?" : 'Already have an account?'}<button onClick={() => setIsLoginView(!isLoginView)} className="font-semibold text-slate-600 hover:underline ml-1">{isLoginView ? 'Sign Up' : 'Sign In'}</button></p>
             </div>
         </div>
@@ -294,9 +363,9 @@ const AboutModal = ({ isOpen, onClose }) => {
                             <a 
                                 href="/Robert_McQva_Resume.pdf" 
                                 download 
-                                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-base md:text-lg transition-colors ${currentUser ? 'bg-slate-900 text-white hover:bg-slate-700' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
-                                onClick={(e) => !currentUser && e.preventDefault()}
-                                title={!currentUser ? "Sign in to download" : "Download Resume"}
+                                className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-base md:text-lg transition-colors ${currentUser && !currentUser.isAnonymous ? 'bg-slate-900 text-white hover:bg-slate-700' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
+                                onClick={(e) => (!currentUser || currentUser.isAnonymous) && e.preventDefault()}
+                                title={(!currentUser || currentUser.isAnonymous) ? "Sign in to download" : "Download Resume"}
                             >
                                 <DownloadIcon className="w-6 h-6" />
                                 Download Resume
@@ -316,7 +385,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
         <div className={`modal-overlay visible`} onClick={onClose}>
             <div className="modal-content max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-end -mt-2 -mr-2">
-                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100"><XIcon className="w-6 h-6 text-slate-500"/></button>
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100" aria-label="Close project details"><XIcon className="w-6 h-6 text-slate-500"/></button>
                 </div>
                 <p className="font-semibold text-slate-600">{project.category}</p>
                 <h3 className="mt-2 text-2xl font-extrabold tracking-tighter text-slate-900">{project.title}</h3>
@@ -334,7 +403,7 @@ const ProjectDetailModal = ({ project, onClose }) => {
     );
 };
 
-// --- Featured Work Section (UPDATED) ---
+// --- Featured Work Section ---
 
 const MobileCarouselCard = ({ project, onViewDetails }) => (
     <div className="bg-slate-100/80 backdrop-blur-sm">
@@ -423,7 +492,6 @@ const DesktopCarouselCard = ({ project, isPanelCollapsed }) => (
 );
 
 const FeaturedWork = ({ onProjectSelect }) => {
-    // --- UPDATED Project Data ---
     const projects = [
         { 
             type: 'mobile', 
@@ -536,7 +604,7 @@ const FeaturedWork = ({ onProjectSelect }) => {
     );
 };
 
-// --- NEW The Framework Section ---
+// --- The Framework Section ---
 const FrameworkStep = ({ step, index }) => {
     const itemRef = useRef(null);
 
@@ -787,7 +855,7 @@ const Footer = () => {
 
 // --- Main App Component ---
 function AppContent() {
-    const { currentUser } = useAuth();
+    const { currentUser, loading } = useAuth();
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
     const [detailProject, setDetailProject] = useState(null);
@@ -866,10 +934,12 @@ function AppContent() {
         )
     }
 
+    if (loading) {
+        return <LoadingSpinner />;
+    }
+
     return (
         <>
-            <GlobalStyles />
-            <BackgroundEffects />
             <div id="page-wrapper" className="relative z-10">
                 <header className={`fixed top-0 left-0 right-0 z-50 glass-header transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}>
                     <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
@@ -878,9 +948,9 @@ function AppContent() {
                         </a>
                         <div className="hidden md:flex items-center gap-8">
                             <NavLinks />
-                            {currentUser ? (
+                            {currentUser && !currentUser.isAnonymous ? (
                                 <div className="relative group">
-                                    <button className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center">
+                                    <button className="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center" aria-label="User menu">
                                         {currentUser.email?.charAt(0).toUpperCase() || 'A'}
                                     </button>
                                     <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 hidden group-hover:block">
@@ -904,7 +974,7 @@ function AppContent() {
                             <nav className="flex flex-col items-center space-y-4">
                                 <NavLinks isMobile={true}/>
                                 <div className="pt-6 w-full border-t border-slate-200 text-center">
-                                    {currentUser ? (
+                                    {currentUser && !currentUser.isAnonymous ? (
                                         <div className="flex flex-col items-center space-y-4">
                                             <p className="text-slate-600">{currentUser.email}</p>
                                             <button onClick={handleSignOut} className="w-full text-lg font-bold bg-slate-100 text-slate-800 px-8 py-3 rounded-lg flex items-center justify-center gap-2">
@@ -953,6 +1023,8 @@ function AppContent() {
 export default function App() {
     return (
         <AuthProvider>
+            <GlobalStyles />
+            <BackgroundEffects />
             <AppContent />
         </AuthProvider>
     );
