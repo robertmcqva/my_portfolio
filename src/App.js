@@ -93,8 +93,8 @@ const GlobalStyles = () => (
             .light-orb {
                 position: absolute;
                 border-radius: 50%;
-                filter: blur(120px); /* Increased blur */
-                opacity: 0.1; /* Slightly reduced opacity */
+                filter: blur(120px);
+                opacity: 0.1;
                 will-change: transform;
             }
 
@@ -120,22 +120,9 @@ const GlobalStyles = () => (
                 100% { transform: translate(50vw, 90vh) scale(1.1); }
             }
 
-            .light-orb-1 {
-                width: 600px; height: 600px;
-                background-color: #a5b4fc;
-                animation: move-orb-1 50s linear infinite;
-            }
-            .light-orb-2 {
-                width: 700px; height: 700px;
-                background-color: #f9a8d4;
-                animation: move-orb-2 60s linear infinite;
-            }
-             .light-orb-3 {
-                width: 550px; height: 550px;
-                background-color: #93c5fd;
-                animation: move-orb-3 55s linear infinite;
-            }
-
+            .light-orb-1 { width: 600px; height: 600px; background-color: #a5b4fc; animation: move-orb-1 50s linear infinite; }
+            .light-orb-2 { width: 700px; height: 700px; background-color: #f9a8d4; animation: move-orb-2 60s linear infinite; }
+            .light-orb-3 { width: 550px; height: 550px; background-color: #93c5fd; animation: move-orb-3 55s linear infinite; }
 
             .glass-header { background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.7); }
             .section-padding { padding-top: 6rem; padding-bottom: 6rem; }
@@ -148,66 +135,51 @@ const GlobalStyles = () => (
             @media (min-width: 640px) { .modal-content { padding: 2rem; } }
             .modal-overlay.visible .modal-content { transform: scale(1); }
             
-            .coverflow-container {
-                overflow: hidden;
-            }
-            .coverflow-track {
-                display: flex;
-                align-items: center;
-                transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1);
-            }
-            .coverflow-item {
-                flex: 0 0 90%; min-width: 0; position: relative;
-                transition: transform 0.6s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.6s ease;
-                opacity: 0.4; transform: scale(0.85);
-            }
-            @media (min-width: 768px) { .coverflow-item { flex: 0 0 75%; } }
-            .coverflow-item.active { opacity: 1; transform: scale(1); }
-            .coverflow-item.active .coverflow-content { opacity: 1; }
-            .coverflow-content {
-                position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
-                color: white; opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
-            }
+            #page-wrapper { transition: filter 0.3s ease-in-out; }
+            body.modal-open #page-wrapper { filter: blur(4px); }
             
-            #page-wrapper {
-                transition: filter 0.3s ease-in-out;
-            }
-            body.modal-open #page-wrapper {
-                filter: blur(4px);
-            }
+            @keyframes carousel-fade-in { from { opacity: 0; } to { opacity: 1; } }
+            .carousel-item-wrapper { animation: carousel-fade-in 0.4s ease-in-out; }
 
-            /* --- Framework Section New Styles --- */
-            @keyframes framework-card-intro {
-                from { opacity: 0; transform: translateY(25px); }
-                to { opacity: 1; transform: translateY(0); }
+            /* --- NEW Framework Section Styles --- */
+            .framework-item {
+                opacity: 0;
+                transform: translateY(50px);
+                transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             }
-
+            .framework-item.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
             .framework-card {
-                animation: framework-card-intro 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                background-color: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid #ffffff;
+                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
             }
-
-            .framework-nav-button {
-                background: transparent;
-                transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            .framework-card:hover {
+                transform: translateY(-10px) scale(1.03);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
             }
-
-            .framework-nav-button:not(.active):hover {
-                transform: scale(1.03);
-                background: rgba(241, 245, 249, 0.7); /* slate-100 with opacity */
+            .timeline-dot {
+                background-color: var(--c-surface);
+                border: 2px solid var(--c-border);
+                color: var(--c-text-secondary);
+                font-weight: 600;
+                transition: all 0.5s ease;
+                transform: scale(1);
             }
-
-            .framework-nav-button.active {
-                background: linear-gradient(180deg, var(--gradient-color) 0%, rgba(255,255,255,0) 100%);
-                box-shadow: 0 4px 20px -5px var(--gradient-color);
+            .framework-item.is-visible .timeline-dot {
+                background-color: var(--c-accent);
+                border-color: var(--c-accent);
+                color: white;
+                transform: scale(1.1);
+                box-shadow: 0 0 0 6px rgba(51, 65, 85, 0.1);
             }
-            
-            /* --- Featured Work Animation --- */
-            @keyframes carousel-fade-in {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            .carousel-item-wrapper {
-                animation: carousel-fade-in 0.4s ease-in-out;
+            .icon-container {
+                background: radial-gradient(circle, #ffffff 60%, #f1f5f9 100%);
+                box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02), 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
             }
         `}</style>
     </>
@@ -230,16 +202,18 @@ const TwitterIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" w
 const ChevronLeftIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>;
 const ChevronRightIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="9 18 15 12 9 6"></polyline></svg>;
 const ChevronUpIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="18 15 12 9 6 15"></polyline></svg>;
-const CompassIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>;
-const LayersIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
-const CodeIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>;
-const CloudUploadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="22"></line></svg>;
-const SyncIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M16 4v4h4"/></svg>;
 const XIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 const DownloadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>;
 const LogOutIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
 const MenuIcon = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
 const InfoIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>;
+
+// --- NEW/UPDATED Icons for Framework Section ---
+const CompassIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>;
+const FrameworkLayersIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>;
+const FrameworkCodeIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>;
+const FrameworkCloudUploadIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="22"></line></svg>;
+const FrameworkSyncIcon = ({className}) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M16 4v4h4"/></svg>;
 
 
 // --- Auth & About Modals ---
@@ -335,27 +309,6 @@ const AboutModal = ({ isOpen, onClose }) => {
     );
 };
 
-const InsightModal = ({ insight, onClose }) => {
-    if (!insight) return null;
-
-    return (
-        <div className={`modal-overlay visible`} onClick={onClose}>
-            <div className="modal-content max-w-3xl w-full" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-start mb-4">
-                    <div>
-                        <p className="font-semibold text-slate-600">{insight.category}</p>
-                        <h2 className="text-2xl md:text-3xl font-bold tracking-tighter mt-1">{insight.title}</h2>
-                    </div>
-                    <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100 -mt-2 -mr-2 flex-shrink-0"><XIcon className="w-6 h-6 text-slate-500"/></button>
-                </div>
-                <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed">
-                   {insight.content}
-                </div>
-            </div>
-        </div>
-    );
-}
-
 const ProjectDetailModal = ({ project, onClose }) => {
     if (!project) return null;
 
@@ -381,13 +334,13 @@ const ProjectDetailModal = ({ project, onClose }) => {
     );
 };
 
-// --- Featured Work: Refactored Components ---
+// --- Featured Work Section (UPDATED) ---
 
 const MobileCarouselCard = ({ project, onViewDetails }) => (
     <div className="bg-slate-100/80 backdrop-blur-sm">
         <div className="p-4">
             <div className={`relative w-full ${(project.type === 'mobile' || project.mobileDisplay === 'mobile') ? 'aspect-[9/16]' : 'aspect-video'} rounded-2xl overflow-hidden border-4 border-slate-200 shadow-lg mx-auto bg-slate-800`}>
-                <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white" frameBorder="0" allowFullScreen></iframe>
+                <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full bg-white" frameBorder="0" allowFullScreen></iframe>
                 <div className="absolute bottom-4 right-4 z-20">
                     <button 
                         onClick={() => onViewDetails(project)}
@@ -438,7 +391,7 @@ const DesktopContent = ({ project }) => {
                 frameBorder="0" 
                 allowFullScreen 
                 src={project.embedUrl} 
-                className="absolute top-0 left-0 w-full h-full bg-white"
+                className="absolute top-0 left-0 w-[calc(100%+17px)] h-full bg-white"
             ></iframe>
         </div>
     );
@@ -470,48 +423,58 @@ const DesktopCarouselCard = ({ project, isPanelCollapsed }) => (
 );
 
 const FeaturedWork = ({ onProjectSelect }) => {
+    // --- UPDATED Project Data ---
     const projects = [
         { 
             type: 'mobile', 
-            category: "UI/UX & Web Development", 
-            title: "Aura Creative Agency", 
-            description: "A visually-driven, animated website for a modern creative agency, focusing on fluid user experience and brand storytelling.", 
+            category: "Mental Health MVP", 
+            title: "Aura Mood Tracker", 
+            description: "For Aura, I was tasked with bringing a client's concept for a mental health and mood-tracking app to life. As the sole developer, I rapidly prototyped and built a functional MVP, focusing on an intuitive and calming user interface. This project showcases my ability to translate a client's vision into a tangible product, delivering a polished proof-of-concept from the ground up.", 
             embedUrl: "https://aura-three-opal.vercel.app/", 
             techStack: ['React', 'Next.js', 'GSAP', 'Tailwind'],
         },
         { 
             type: 'web', 
             mobileDisplay: 'mobile',
-            category: "FinTech Dashboard", 
+            category: "AI SaaS Platform", 
+            title: "Artemix", 
+            description: "As the sole creator of Artemix, I transformed a complex engineering challenge into a scalable, enterprise-ready SaaS application. I orchestrated every phase of the project, from initial concept and branding to the complete business and marketing strategy. My work involved architecting the full-stack application and engineering the core AI, which extracts and understands highly complex data from civil engineering drawings. The result is a robust automation tool, built on a custom data and training pipeline, that dramatically accelerates the engineering workflow.",
+            embedUrl: "https://artemix.vercel.app/", 
+            techStack: ['React', 'Next.js', 'FastAPI', 'Vertex AI', 'Docker', 'Vercel'],
+        },
+        { 
+            type: 'web', 
+            mobileDisplay: 'mobile',
+            category: "FinTech MVP", 
             title: "Zenith Analytics", 
-            description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
+            description: "Zenith Analytics began with a broad client request for a 'next-gen fintech application.' Taking this high-level concept, I independently designed and developed a comprehensive MVP. The result is a clean, data-rich dashboard that provides clear financial insights, demonstrating my ability to define product features, architect a user-friendly interface, and deliver a complete solution based on a visionary idea.", 
             embedUrl: "https://zenith-sand.vercel.app/", 
             techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
         },
         { 
             type: 'mobile', 
             display: 'tablet',
-            category: "Interactive Tablet Kiosk", 
+            category: "Cross-Platform Real Estate App", 
             title: "Real Estate Showcase", 
-            description: "An interactive kiosk application for showcasing property listings, designed for use on tablet devices in real estate offices or at open houses.", 
+            description: "As the sole developer, I created this interactive real estate showcase as a comprehensive MVP. Built entirely with Flutter, the application runs seamlessly on web, Android, and iOS from a single codebase. This project highlights my expertise in cross-platform development, delivering a consistent and polished user experience designed to engage potential buyers on any device.", 
             embedUrl: "https://es1anjvcwkmz0nuetf8y.share.dreamflow.app/", 
             techStack: ['Flutter', 'Dart', 'Firebase'] 
         },
         { 
             type: '3d',
             mobileDisplay: 'mobile',
-            category: "3D Asset & Game Development", 
+            category: "Game Asset Integration", 
             title: "Game-Ready Vehicle", 
-            description: "A high-fidelity 3D model integrated into a real-time game engine, featuring custom physics and interactive components.", 
+            description: "This project was a creative partnership where my role was to bring a high-fidelity 3D model to life. While my partner focused on the asset creation in Blender, I handled all programming and animation within the Unity engine. This involved implementing realistic vehicle physics with C#, creating interactive components, and ensuring the asset was fully optimized and game-ready.", 
             embedUrl: "https://sketchfab.com/models/1b63ea01e6f443cdad5fec3d366d8cf1/embed?autostart=1&ui_theme=dark&transparent=1&ui_controls=0&ui_infos=0", 
             techStack: ['Unity', 'C#', 'Blender'],
         },
         { 
             type: 'web', 
             mobileDisplay: 'mobile',
-            category: "Web Application Showcase", 
+            category: "Cross-Platform Web App", 
             title: "Live Web App", 
-            description: "A production-ready, fully responsive web application built with a modern stack, focusing on clean UI and seamless user experience.", 
+            description: "This project serves as a comprehensive demonstration of a modern, production-ready application. Built as a versatile MVP, it is fully responsive for the web while also running natively on iOS and Android. As the sole developer, I engineered this app to showcase a clean, seamless user experience and a robust, cross-platform architecture using a modern tech stack.", 
             embedUrl: "https://7n86c61l8bljunbuuyi9.share.dreamflow.app", 
             techStack: ['React', 'Next.js', 'Vercel'] 
         },
@@ -573,438 +536,103 @@ const FeaturedWork = ({ onProjectSelect }) => {
     );
 };
 
+// --- NEW The Framework Section ---
+const FrameworkStep = ({ step, index }) => {
+    const itemRef = useRef(null);
 
-// --- The Framework Section (Apple-inspired Vertical Story) ---
+    useEffect(() => {
+        const currentRef = itemRef.current;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            },
+            { threshold: 0.3 }
+        );
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (observer && currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, []);
+
+    const isEven = index % 2 === 0;
+
+    return (
+        <div ref={itemRef} className={`framework-item group relative flex items-center ${isEven ? '' : 'md:flex-row-reverse'}`}>
+             <div className={`md:w-[calc(50%-2.5rem)] ${isEven ? 'md:ml-auto' : 'md:mr-auto'}`}>
+                 <div className="relative p-8 rounded-2xl framework-card shadow-lg">
+                     <div className="relative z-10">
+                         <div className="w-16 h-16 rounded-full flex items-center justify-center icon-container mb-6">
+                             <step.icon className="w-8 h-8 text-slate-500" />
+                         </div>
+                         <h3 className="text-2xl font-bold text-slate-900">{step.title}</h3>
+                         <p className="mt-3 text-slate-600 leading-relaxed">{step.description}</p>
+                     </div>
+                 </div>
+             </div>
+             <div className="hidden md:block w-20 h-full absolute top-0 left-1/2 -translate-x-1/2">
+                 <div className="w-full h-full flex items-center justify-center">
+                     <div className="timeline-dot w-10 h-10 rounded-full flex items-center justify-center text-sm">
+                        0{index+1}
+                     </div>
+                 </div>
+             </div>
+        </div>
+    );
+};
+
 const TheFramework = () => {
     const processSteps = [
         { 
             icon: CompassIcon, 
             title: "Discover", 
-            subtitle: "Defining the 'Why'",
-            description: "The initial phase is all about deep immersion. I conduct stakeholder interviews, user research, and competitive analysis to build a comprehensive understanding of the project's context, challenges, and opportunities. The goal is to define a clear problem statement and establish measurable success metrics that align user needs with business objectives.",
-            accentColor: 'text-blue-500',
-            gradientColor: 'rgba(59, 130, 246, 0.1)'
+            description: "I start by deeply understanding the core problem, user needs, and business goals to ensure the project is set up for success from day one." 
         },
         { 
-            icon: LayersIcon, 
+            icon: FrameworkLayersIcon, 
             title: "Design", 
-            subtitle: "Architecting the Solution",
-            description: "With a clear strategy, I move to architecting the solution. This involves creating user flow diagrams, wireframes, and high-fidelity prototypes to map out the user experience. Simultaneously, I design a scalable and maintainable system architecture, planning the data models, API contracts, and technology stack.",
-            accentColor: 'text-purple-500',
-            gradientColor: 'rgba(168, 85, 247, 0.1)'
+            description: "Next, I architect a robust solution, planning everything from the user interface and experience to the underlying system and data architecture." 
         },
         { 
-            icon: CodeIcon, 
+            icon: FrameworkCodeIcon, 
             title: "Develop", 
-            subtitle: "Bringing Vision to Life",
-            description: "This is where the vision comes to life. Working in agile sprints, I write clean, efficient, and well-documented code. I practice test-driven development and implement continuous integration pipelines to ensure code quality and stability. Regular code reviews and iterative feedback loops are crucial to this process.",
-            accentColor: 'text-green-500',
-            gradientColor: 'rgba(34, 197, 94, 0.1)'
+            description: "With a solid plan, I build, test, and iterate on the product, writing clean, efficient, and scalable code while ensuring quality at every stage." 
         },
         { 
-            icon: CloudUploadIcon, 
+            icon: FrameworkCloudUploadIcon, 
             title: "Deploy", 
-            subtitle: "Delivering to the World",
-            description: "A seamless launch is critical. I establish automated CI/CD pipelines to make deployments predictable and reliable. I configure cloud infrastructure for scalability and security, implement robust monitoring and logging to track application health, and perform final quality assurance checks before going live.",
-            accentColor: 'text-indigo-500',
-            gradientColor: 'rgba(99, 102, 241, 0.1)'
+            description: "I ensure a seamless launch by managing deployment pipelines, monitoring performance, and gathering feedback for future iterations." 
         },
         { 
-            icon: SyncIcon, 
+            icon: FrameworkSyncIcon, 
             title: "Evolve", 
-            subtitle: "Iterating for Impact",
-            description: "The project doesn't end at launch. I continuously monitor application performance, user engagement, and key business metrics. By analyzing this data and gathering direct user feedback, I identify opportunities for improvement and plan the next cycle of feature enhancements, ensuring the product evolves and continues to deliver value.",
-            accentColor: 'text-pink-500',
-            gradientColor: 'rgba(236, 72, 153, 0.1)'
+            description: "The launch is just the beginning. I monitor performance, gather user feedback, and use data-driven insights to inform the next cycle of improvements and features." 
         }
     ];
 
-    const [activeStepIndex, setActiveStepIndex] = useState(0);
-    const activeStep = processSteps[activeStepIndex];
-
     return (
-        <section id="framework" className="section-padding bg-transparent">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16 md:mb-24">
-                     <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-slate-900">The Framework.</h2>
-                     <p className="mt-4 text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">My methodical approach to building successful, scalable, and user-centric products from concept to completion.</p>
+        <section id="framework" className="section-padding bg-slate-50 overflow-hidden">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-20">
+                     <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">The Framework</h2>
+                     <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">A disciplined, end-to-end approach to building successful digital products.</p>
                 </div>
 
-                <div className="lg:grid lg:grid-cols-12 lg:gap-16 items-start">
-                    {/* --- Left-side Navigation --- */}
-                    <div className="lg:col-span-4 lg:sticky lg:top-28">
-                        <ul className="flex lg:flex-col gap-2 mb-12 lg:mb-0 overflow-x-auto no-scrollbar">
-                            {processSteps.map((step, index) => (
-                                <li key={step.title} className="flex-shrink-0 lg:flex-shrink">
-                                    <button
-                                        onClick={() => setActiveStepIndex(index)}
-                                        className={`framework-nav-button w-full text-left p-4 rounded-xl border border-transparent ${activeStepIndex === index ? 'active' : ''}`}
-                                        style={activeStepIndex === index ? { '--gradient-color': step.gradientColor } : {}}
-                                    >
-                                        <p className={`text-sm font-semibold ${activeStepIndex === index ? step.accentColor : 'text-slate-500'}`}>{`0${index + 1}`}</p>
-                                        <h3 className={`text-xl font-bold mt-1 ${activeStepIndex === index ? 'text-slate-900' : 'text-slate-700'}`}>{step.title}</h3>
-                                        <p className="text-sm text-slate-500 mt-1">{step.subtitle}</p>
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                <div className="relative">
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-slate-200 hidden md:block" aria-hidden="true"></div>
+                    <div className="space-y-16 md:space-y-24">
+                        {processSteps.map((step, index) => (
+                            <FrameworkStep key={index} step={step} index={index} />
+                        ))}
                     </div>
-
-                    {/* --- Right-side Content Card --- */}
-                    <div className="lg:col-span-8">
-                        <div className="relative min-h-[450px]">
-                             <div key={activeStepIndex} className="framework-card bg-white p-8 sm:p-12 rounded-2xl shadow-2xl shadow-slate-200/80 border border-slate-200/80">
-                                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-100 mb-8`}>
-                                    <activeStep.icon className={`w-8 h-8 ${activeStep.accentColor}`} />
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tighter">{activeStep.title}</h3>
-                                <p className="mt-6 text-lg text-slate-600 leading-relaxed">
-                                    {activeStep.description}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-};
-
-
-// --- Streaming Carousel (Coverflow Effect) ---
-const MobileInsightCard = ({ article, onReadInsight }) => (
-    <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-video bg-slate-900">
-        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <h3 className="font-semibold">{article.category}</h3>
-            <p className="text-2xl font-bold tracking-tighter mt-1">{article.title}</p>
-            <button onClick={() => onReadInsight(article)} className="mt-4 inline-block bg-white text-black font-semibold px-5 py-2.5 rounded-full text-sm hover:bg-slate-200 transition-colors">
-                Read Insight
-            </button>
-        </div>
-    </div>
-);
-
-const StreamingCarousel = ({ onReadInsight }) => {
-    const articles = [
-        { 
-            id: 1, 
-            category: "Artificial Intelligence", 
-            title: "The Future of Generative AI", 
-            imageUrl: "https://placehold.co/1960x1102/1e293b/94a3b8?text=AI",
-            content: (
-                <>
-                    <p className="mb-4">
-                        Generative AI has moved from a niche concept to a dominant force reshaping our digital world. Unlike traditional AI that analyzes existing data, generative models create entirely new, original content—from text and images to complex code and scientific models. This isn't just an incremental improvement; it's a paradigm shift in human-computer collaboration that is unlocking unprecedented opportunities.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Key Trends for 2025 and Beyond</h3>
-                    <p className="mb-4">
-                        The evolution of Generative AI is accelerating. As we look ahead, several key trends are defining its trajectory:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>Multimodality as the Standard:</strong> Early models specialized in one domain (e.g., text or images). The future is multimodal systems like Google's Gemini, which can seamlessly understand, process, and generate content across text, images, audio, and video. This allows for far more sophisticated applications, such as generating a video with a complete script and soundtrack from a single prompt.
-                        </li>
-                        <li>
-                            <strong>The Rise of AI Agents:</strong> We are moving from single-purpose models to coordinated, multi-agent systems. Think of a team of specialized AIs working together: one for research, one for writing, one for fact-checking, and another for translating. This collaborative approach enhances accuracy, scalability, and efficiency, enabling the automation of complex, multi-step workflows.
-                        </li>
-                        <li>
-                            <strong>Human-AI Co-Creation:</strong> The narrative is shifting from AI as a tool to AI as a creative partner. In fields like software development, engineering, and design, AI is augmenting human expertise—not replacing it. Developers use AI to write boilerplate code and debug, while artists use it to generate novel concepts, allowing professionals to focus on higher-level strategy and innovation.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Ethical Frontiers and Responsibility</h3>
-                    <p className="mb-4">
-                        With great power comes great responsibility. As generative models become more integrated into society, addressing the ethical implications is paramount. Key considerations include:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 pl-2">
-                        <li>
-                            <strong>Transparency and Regulation:</strong> As regulators catch up, we will see stricter rules for disclosing AI-generated content, auditing models for bias, and ensuring data privacy. Building trust through transparency is no longer optional.
-                        </li>
-                        <li>
-                            <strong>Bias and Misinformation:</strong> Models trained on vast internet datasets can inherit and amplify human biases. The industry must continue to develop techniques to mitigate these biases and combat the potential for generating persuasive but false information at scale.
-                        </li>
-                         <li>
-                            <strong>Environmental Impact:</strong> Training large-scale models is computationally intensive and has a significant energy footprint. A growing focus on "Green AI" involves developing more efficient algorithms and hardware to ensure the future of AI is sustainable.
-                        </li>
-                    </ul>
-                     <p className="mt-6">
-                        The generative AI landscape is dynamic and full of opportunity. For engineers and creators, the key is not just to adopt these tools, but to understand the underlying principles, anticipate future trends, and build ethically. The future we're building is one where AI augments human potential, driving progress in ways we are only beginning to imagine.
-                    </p>
-                </>
-            )
-        },
-        { 
-            id: 2, 
-            category: "Software Development", 
-            title: "Mastering React Hooks", 
-            imageUrl: "https://placehold.co/1960x1102/4f46e5/a5b4fc?text=React",
-            content: (
-                <>
-                    <p className="mb-4">
-                        React Hooks revolutionized how we build components, allowing us to use state and other React features in functional components. This shift from class-based components has led to cleaner, more composable, and easier-to-understand code. Mastering Hooks is essential for any modern React developer.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Core Hooks: `useState` and `useEffect`</h3>
-                    <p className="mb-4">
-                        These are the foundational Hooks you'll use in almost every component:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>`useState`:</strong> The most basic Hook, it allows you to add state to functional components. It returns a stateful value and a function to update it. Remember, updates are asynchronous and batched for performance.
-                        </li>
-                        <li>
-                            <strong>`useEffect`:</strong> This Hook lets you perform side effects in your components, such as data fetching, subscriptions, or manually changing the DOM. Think of it as a combination of `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount`. The key is mastering its dependency array to control when the effect re-runs.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Advanced Hooks for Optimization and State Management</h3>
-                     <p className="mb-4">
-                        As applications grow, managing performance and complex state becomes crucial.
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>`useContext`:</strong> Solves the "prop drilling" problem by allowing you to share state across the entire component tree without passing props down manually.
-                        </li>
-                        <li>
-                             <strong>`useReducer`:</strong> An alternative to `useState` for managing complex state logic. It's often preferred when you have multiple sub-values or when the next state depends on the previous one.
-                        </li>
-                        <li>
-                            <strong>`useCallback` and `useMemo`:</strong> These are performance optimization Hooks. `useCallback` memoizes functions, preventing unnecessary re-renders of child components, while `useMemo` memoizes values, avoiding expensive recalculations on every render.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Power of Custom Hooks</h3>
-                    <p className="mb-4">
-                        Perhaps the most powerful feature of Hooks is the ability to create your own. By extracting component logic into reusable functions (e.g., `useFetch`, `useLocalStorage`, `useEventListener`), you can share logic across components, keep your code DRY (Don't Repeat Yourself), and build a powerful library of personal utilities.
-                    </p>
-                     <p className="mt-6">
-                        Hooks are more than just an API; they represent a fundamental shift in thinking about React development. By embracing a functional and composable approach, you can build applications that are not only more powerful but also significantly easier to maintain and scale.
-                    </p>
-                </>
-            )
-        },
-        { 
-            id: 3, 
-            category: "Product Design", 
-            title: "Principles of User-Centric Design", 
-            imageUrl: "https://placehold.co/1960x1102/059669/a7f3d0?text=Design",
-            content: (
-                <>
-                    <p className="mb-4">
-                        In today's competitive digital landscape, a great product is no longer defined just by its features, but by its experience. User-Centric Design (UCD) is an iterative design philosophy that places the user, their needs, and their limitations at the forefront of every stage of the design and development process. It's about building products *for* people, not just for the sake of technology.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Core Pillars of UCD</h3>
-                    <p className="mb-4">
-                        User-Centric Design is guided by a few fundamental principles:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>Empathy is Everything:</strong> You cannot design effectively for users you don't understand. The process begins with deep empathy—understanding their context, motivations, pain points, and goals through research methods like user interviews, surveys, and creating user personas.
-                        </li>
-                        <li>
-                            <strong>Iterate, Iterate, Iterate:</strong> The first idea is rarely the best one. UCD embraces a cycle of prototyping, user testing, and refining. Low-fidelity wireframes and interactive prototypes allow for quick feedback and learning before a single line of code is written, saving time and resources.
-                        </li>
-                        <li>
-                            <strong>Clarity and Simplicity Trump All:</strong> A successful design is one that feels intuitive. It guides the user effortlessly toward their goal without unnecessary complexity. This means clear navigation, readable typography, and a consistent visual language that doesn't make the user think.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">From Philosophy to Process</h3>
-                    <p className="mb-4">
-                        UCD isn't just an abstract idea; it's a practical process. A typical workflow involves understanding the context of use, specifying user requirements, producing design solutions, and evaluating the design against those requirements. This cycle repeats as the product evolves, ensuring it continuously meets user needs.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Business Case for User-Centricity</h3>
-                     <p className="mb-4">
-                        Ultimately, designing for the user is designing for the business. A product that is easy and enjoyable to use leads to higher user satisfaction, increased engagement, better retention rates, and stronger brand loyalty. By solving real problems for real people, you create lasting value for both the user and the business.
-                    </p>
-                </>
-            )
-        },
-        { 
-            id: 4, 
-            category: "Cloud Computing", 
-            title: "Scaling Applications with Kubernetes", 
-            imageUrl: "https://placehold.co/1960x1102/0891b2/67e8f9?text=Cloud",
-            content: (
-                 <>
-                    <p className="mb-4">
-                       As applications have shifted from monoliths to distributed microservices, the complexity of managing them has exploded. Kubernetes (K8s) has emerged as the de facto operating system for the cloud, providing a robust framework for deploying, scaling, and managing containerized applications. Understanding its core principles is crucial for building modern, resilient systems.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Why Kubernetes? The Problem of Scale</h3>
-                    <p className="mb-4">
-                        In a microservices architecture, you're no longer managing a single application but dozens or even hundreds of independent services. This introduces challenges in deployment, networking, load balancing, and health monitoring. Kubernetes solves these problems by providing a unified, declarative API to manage the entire application lifecycle.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Core Concepts Demystified</h3>
-                    <p className="mb-4">
-                       Kubernetes has a steep learning curve, but its power lies in a few core concepts:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>Containers:</strong> The lightweight, portable units that package an application and its dependencies. Kubernetes is a container orchestrator.
-                        </li>
-                        <li>
-                            <strong>Pods:</strong> The smallest deployable unit in Kubernetes. A Pod is a wrapper around one or more containers, sharing storage and network resources.
-                        </li>
-                         <li>
-                            <strong>Deployments:</strong> You describe a desired state in a Deployment (e.g., "I want three replicas of my web server running"), and Kubernetes works to maintain that state, automatically handling updates and rollbacks.
-                        </li>
-                        <li>
-                            <strong>Services:</strong> Pods are ephemeral and can be replaced at any time. A Service provides a stable IP address and DNS name for a set of Pods, enabling reliable communication between microservices.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Key Benefits for Engineering Teams</h3>
-                    <ul className="list-disc list-inside space-y-3 mt-4 pl-2">
-                         <li>
-                            <strong>Automated Scaling and Self-Healing:</strong> Kubernetes can automatically scale your application based on CPU usage or other metrics and will automatically restart or replace containers that fail.
-                        </li>
-                        <li>
-                            <strong>Infrastructure Abstraction:</strong> Developers can focus on their applications without worrying about the underlying machines. Kubernetes abstracts away the hardware, whether it's on-premises or in any public cloud.
-                        </li>
-                         <li>
-                            <strong>Portability and No Vendor Lock-in:</strong> Because Kubernetes is open-source and runs everywhere, it provides the ultimate freedom to move workloads between different environments without significant re-architecture.
-                        </li>
-                    </ul>
-                     <p className="mt-6">
-                        While Kubernetes itself is complex, its adoption has been simplified by managed offerings from cloud providers (like GKE, EKS, and AKS). By leveraging its power, engineering teams can build highly available, scalable, and resilient systems that are fit for the demands of the modern cloud-native era.
-                    </p>
-                </>
-            )
-        },
-        { 
-            id: 5, 
-            category: "Cybersecurity", 
-            title: "The Zero Trust Security Model", 
-            imageUrl: "https://placehold.co/1960x1102/be123c/fecdd3?text=Security",
-            content: (
-                <>
-                    <p className="mb-4">
-                        The traditional "castle-and-moat" approach to security, which trusts anyone and anything inside the network perimeter, is fundamentally broken. In a world of remote work, cloud services, and sophisticated cyber threats, the perimeter is gone. Zero Trust is the modern security paradigm designed for this reality, built on a simple but powerful principle: **never trust, always verify.**
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Philosophical Shift: From Trust to Verification</h3>
-                    <p className="mb-4">
-                       Zero Trust assumes that the network is always hostile. It eliminates the concept of a trusted internal network and an untrusted external one. Instead, every access request—regardless of where it originates—must be treated as a potential threat. Trust is not granted based on location; it must be explicitly and continuously earned.
-                    </p>
-                    <h3 className="text-xl font-bold mt-6 mb-3">The Three Pillars of Zero Trust</h3>
-                    <p className="mb-4">
-                       Implementing Zero Trust architecture revolves around three core pillars:
-                    </p>
-                    <ul className="list-disc list-inside space-y-3 mb-4 pl-2">
-                        <li>
-                            <strong>Verify Explicitly:</strong> Always authenticate and authorize based on all available data points. This includes user identity (often with multi-factor authentication), device health, location, and the service being requested.
-                        </li>
-                        <li>
-                            <strong>Use Least Privilege Access:</strong> Grant users and devices only the bare minimum permissions required to perform their specific task. This limits the potential damage if an account or device is compromised, a practice known as "just-in-time" and "just-enough-access."
-                        </li>
-                         <li>
-                            <strong>Assume Breach:</strong> Don't wait for an attack to happen; operate as if one has already occurred. This mindset drives critical security practices like micro-segmentation (to prevent lateral movement), end-to-end encryption, and continuous monitoring to detect and respond to threats quickly.
-                        </li>
-                    </ul>
-                    <h3 className="text-xl font-bold mt-6 mb-3">Why It Matters for Modern Development</h3>
-                    <p className="mb-4">
-                        For engineers and developers, Zero Trust isn't just an IT policy; it's a development principle. It means building security into applications from the ground up, implementing strong authentication for APIs, and ensuring services have the minimum necessary permissions to function.
-                    </p>
-                     <p className="mt-6">
-                        Adopting Zero Trust is a journey, not a destination. It requires a strategic, phased approach to replace implicit trust with explicit, policy-based verification. In an era where data breaches are inevitable, it is the most effective strategy for minimizing risk and building a resilient, secure digital infrastructure.
-                    </p>
-                </>
-            )
-        },
-    ];
-    
-    const [activeIndex, setActiveIndex] = useState(0);
-    const autoplayRef = useRef(null);
-
-    const handleNext = () => {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % articles.length);
-    };
-
-    const handlePrev = () => {
-        setActiveIndex((prevIndex) => (prevIndex - 1 + articles.length) % articles.length);
-    };
-
-    const startAutoplay = () => {
-        stopAutoplay();
-        autoplayRef.current = setInterval(handleNext, 5000);
-    };
-
-    const stopAutoplay = () => {
-        if (autoplayRef.current) {
-            clearInterval(autoplayRef.current);
-        }
-    };
-
-    useEffect(() => {
-        startAutoplay();
-        return stopAutoplay;
-    }, []);
-
-    const itemWidthPercentage = 90; 
-    const mdItemWidthPercentage = 75;
-    const trackOffset = (100 - itemWidthPercentage) / 2;
-    const mdTrackOffset = (100 - mdItemWidthPercentage) / 2;
-
-    const [trackTranslateX, setTrackTranslateX] = useState(-activeIndex * itemWidthPercentage + trackOffset);
-
-    useEffect(() => {
-        const updateTrackPosition = () => {
-            const isMobile = window.innerWidth < 768;
-            const width = isMobile ? itemWidthPercentage : mdItemWidthPercentage;
-            const offset = isMobile ? trackOffset : mdTrackOffset;
-            setTrackTranslateX(-activeIndex * width + offset);
-        };
-        updateTrackPosition();
-        window.addEventListener('resize', updateTrackPosition);
-        return () => window.removeEventListener('resize', updateTrackPosition);
-    }, [activeIndex]);
-
-
-    return (
-        <section id="insights" className="section-padding bg-transparent">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12 md:mb-16">
-                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">Insights</h2>
-                     <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology and design.</p>
-                </div>
-
-                {/* Mobile View: Vertical List */}
-                <div className="md:hidden space-y-6">
-                    {articles.map(article => (
-                        <MobileInsightCard key={article.id} article={article} onReadInsight={onReadInsight} />
-                    ))}
-                </div>
-
-                {/* Desktop View: Coverflow Carousel */}
-                <div className="hidden md:block">
-                    <div className="coverflow-container h-[60vh]">
-                        <div 
-                            className="coverflow-track h-full"
-                            style={{ transform: `translateX(${trackTranslateX}%)` }}
-                        >
-                            {articles.map((item, index) => {
-                                 const isActive = index === activeIndex;
-                                return (
-                                    <div key={item.id} className={`coverflow-item ${isActive ? 'active' : ''}`}>
-                                        <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
-                                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover"/>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
-                                            <div className="coverflow-content">
-                                                <h3 className="text-xl font-semibold">{item.category}</h3>
-                                                <p className="text-5xl font-bold tracking-tighter mt-1">{item.title}</p>
-                                                <button onClick={() => onReadInsight(item)} className="mt-6 inline-block bg-white text-black font-semibold px-5 py-2.5 rounded-full text-base hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
-                                                    Read Insight
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                     <div className="flex justify-center items-center gap-4 mt-8">
-                        <button onClick={handlePrev} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronLeftIcon className="w-6 h-6"/></button>
-                         {articles.map((_, index) => (
-                             <button key={index} onClick={() => setActiveIndex(index)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-slate-800 w-6' : 'bg-slate-300'}`}></button>
-                         ))}
-                        <button onClick={handleNext} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronRightIcon className="w-6 h-6"/></button>
-                     </div>
                 </div>
             </div>
         </section>
@@ -1162,7 +790,6 @@ function AppContent() {
     const { currentUser } = useAuth();
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
     const [isAboutModalOpen, setAboutModalOpen] = useState(false);
-    const [selectedInsight, setSelectedInsight] = useState(null);
     const [detailProject, setDetailProject] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -1193,7 +820,7 @@ function AppContent() {
     }, [lastScrollY, isMenuOpen]);
 
 
-    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!selectedInsight || !!detailProject;
+    const anyModalOpen = isAuthModalOpen || isAboutModalOpen || !!detailProject;
 
     useEffect(() => {
         if (anyModalOpen) {
@@ -1234,7 +861,6 @@ function AppContent() {
             <>
                 <a href="#work" onClick={(e) => handleNavClick(e, 'work')} className={isMobile ? mobileClass : commonClass}>The Work</a>
                 <a href="#framework" onClick={(e) => handleNavClick(e, 'framework')} className={isMobile ? mobileClass : commonClass}>Framework</a>
-                <a href="#insights" onClick={(e) => handleNavClick(e, 'insights')} className={isMobile ? mobileClass : commonClass}>Insights</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setIsMenuOpen(false); setAboutModalOpen(true); }} className={isMobile ? mobileClass : commonClass}>About</a>
             </>
         )
@@ -1308,7 +934,6 @@ function AppContent() {
                     
                     <FeaturedWork onProjectSelect={setDetailProject} />
                     <TheFramework />
-                    <StreamingCarousel onReadInsight={setSelectedInsight} />
                     <Testimonials />
                     <Contact />
                 </main>
@@ -1320,7 +945,6 @@ function AppContent() {
             {/* Modals are outside the page-wrapper to avoid being blurred */}
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
             <AboutModal isOpen={isAboutModalOpen} onClose={() => setAboutModalOpen(false)} />
-            <InsightModal insight={selectedInsight} onClose={() => setSelectedInsight(null)} />
             <ProjectDetailModal project={detailProject} onClose={() => setDetailProject(null)} />
         </>
     );
