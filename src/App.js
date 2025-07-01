@@ -437,12 +437,12 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
             return (
                  <div className="relative w-full bg-slate-100 h-0 pb-[75%] md:h-full md:pb-0">
                     <div className="absolute inset-0 md:p-4 lg:p-8 flex justify-center items-center">
-                        <div className="md:hidden w-full h-full">
-                            <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white" scrolling="no"></iframe>
+                        <div className="md:hidden w-full h-full overflow-hidden">
+                            <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full bg-white"></iframe>
                         </div>
                         <div className="hidden md:block my-auto relative mx-auto border-gray-800 bg-gray-800 border-[16px] rounded-[2.5rem] w-full max-w-[800px] aspect-[4/3] shadow-xl">
                             <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                                <iframe src={project.embedUrl} title={project.title} className="w-full h-full" scrolling="no"></iframe>
+                                <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full"></iframe>
                             </div>
                         </div>
                     </div>
@@ -456,12 +456,12 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
                      <div className="hidden md:block">
                         <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
                             <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white">
-                               <iframe src={project.embedUrl} title={project.title} className="w-full h-full"></iframe>
+                               <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full"></iframe>
                             </div>
                         </div>
                     </div>
                      <div className="md:hidden w-full aspect-[9/16] rounded-2xl overflow-hidden border-8 border-slate-800 shadow-xl">
-                         <iframe src={project.embedUrl} title={project.title} className="w-full h-full bg-white"></iframe>
+                         <iframe src={project.embedUrl} title={project.title} className="w-[calc(100%+17px)] h-full bg-white"></iframe>
                      </div>
                  </div>
              );
@@ -469,7 +469,7 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
 
         // Default for 'web' and '3d'
         return (
-            <div className="relative w-full bg-slate-900 h-0 pb-[56.25%] md:h-full md:pb-0">
+            <div className="relative w-full bg-slate-900 h-0 pb-[56.25%] md:h-full md:pb-0 overflow-hidden">
                  <iframe 
                     title={project.title} 
                     frameBorder="0" 
@@ -477,7 +477,7 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
                     mozallowfullscreen="true" 
                     webkitallowfullscreen="true" 
                     src={project.embedUrl} 
-                    className="absolute top-0 left-0 w-full h-full bg-white"
+                    className="absolute top-0 left-0 w-[calc(100%+17px)] h-full bg-white"
                  ></iframe>
             </div>
         );
@@ -527,20 +527,20 @@ const CarouselCard = ({ project, onViewDetails, isPanelCollapsed }) => {
 const FeaturedWork = ({ onProjectSelect }) => {
     const projects = [
         { 
+            type: 'mobile', 
+            category: "UI/UX & Web Development", 
+            title: "Aura Creative Agency", 
+            description: "A visually-driven, animated website for a modern creative agency, focusing on fluid user experience and brand storytelling.", 
+            embedUrl: "https://aura-three-opal.vercel.app/", 
+            techStack: ['React', 'Next.js', 'GSAP', 'Tailwind'],
+        },
+        { 
             type: 'web', 
             category: "FinTech Dashboard", 
             title: "Zenith Analytics", 
             description: "A comprehensive and interactive dashboard for visualizing key financial metrics, recent transactions, and investment performance.", 
             embedUrl: "https://zenith-sand.vercel.app/", 
             techStack: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
-        },
-        { 
-            type: 'web', 
-            category: "UI/UX & Web Development", 
-            title: "Aura Creative Agency", 
-            description: "A visually-driven, animated website for a modern creative agency, focusing on fluid user experience and brand storytelling.", 
-            embedUrl: "https://aura-three-opal.vercel.app/", 
-            techStack: ['React', 'Next.js', 'GSAP', 'Tailwind'],
         },
         { 
             type: 'mobile', 
@@ -1342,11 +1342,11 @@ function AppContent() {
                 <main>
                     <section className="section-padding relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] pt-20">
                         <div className="relative z-10 text-center px-4">
-                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-4">
                                 Engineering <br />Digital Experiences
                             </h1>
-                            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                                Full-stack development & user-centric design.
+                            <p className="text-xl md:text-2xl font-medium text-slate-500 tracking-wide">
+                                Beyond the hype
                             </p>
                         </div>
                     </section>
