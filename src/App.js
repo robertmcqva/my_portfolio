@@ -551,9 +551,20 @@ const FeaturedWork = ({ onProjectSelect }) => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Mobile Navigation */}
+                    <div className="md:hidden absolute top-1/2 -translate-y-1/2 w-full flex justify-between items-center px-2 z-20">
+                        <button onClick={handlePrev} className="bg-white/60 hover:bg-white backdrop-blur-sm rounded-full p-2 shadow-lg transition-colors" aria-label="Previous project">
+                            <ChevronLeftIcon className="w-6 h-6 text-slate-800" />
+                        </button>
+                        <button onClick={handleNext} className="bg-white/60 hover:bg-white backdrop-blur-sm rounded-full p-2 shadow-lg transition-colors" aria-label="Next project">
+                            <ChevronRightIcon className="w-6 h-6 text-slate-800" />
+                        </button>
+                    </div>
                 </div>
                 
-                <div className="flex justify-center items-center gap-4 mt-8">
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex justify-center items-center gap-4 mt-8">
                     <button onClick={handlePrev} className="bg-white hover:bg-slate-100 rounded-full p-3 shadow-md border border-slate-200 transition-colors" aria-label="Previous featured project"><ChevronLeftIcon className="w-6 h-6 text-slate-700" /></button>
                      <button onClick={handleNext} className="bg-white hover:bg-slate-100 rounded-full p-3 shadow-md border border-slate-200 transition-colors" aria-label="Next featured project"><ChevronRightIcon className="w-6 h-6 text-slate-700" /></button>
                 </div>
@@ -661,6 +672,20 @@ const TheFramework = () => {
 
 
 // --- Streaming Carousel (Coverflow Effect) ---
+const MobileInsightCard = ({ article, onReadInsight }) => (
+    <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-video bg-slate-900">
+        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+            <h3 className="font-semibold">{article.category}</h3>
+            <p className="text-2xl font-bold tracking-tighter mt-1">{article.title}</p>
+            <button onClick={() => onReadInsight(article)} className="mt-4 inline-block bg-white text-black font-semibold px-5 py-2.5 rounded-full text-sm hover:bg-slate-200 transition-colors">
+                Read Insight
+            </button>
+        </div>
+    </div>
+);
+
 const StreamingCarousel = ({ onReadInsight }) => {
     const articles = [
         { 
@@ -668,8 +693,6 @@ const StreamingCarousel = ({ onReadInsight }) => {
             category: "Artificial Intelligence", 
             title: "The Future of Generative AI", 
             imageUrl: "https://placehold.co/1960x1102/1e293b/94a3b8?text=AI",
-            url: "#",
-            logo: {src: "https://placehold.co/120x50/ffffff/1e293b?text=Insights", alt: "Insights"},
             content: (
                 <>
                     <p className="mb-4">
@@ -716,8 +739,6 @@ const StreamingCarousel = ({ onReadInsight }) => {
             category: "Software Development", 
             title: "Mastering React Hooks", 
             imageUrl: "https://placehold.co/1960x1102/4f46e5/a5b4fc?text=React",
-            url: "#",
-            logo: {src: "https://placehold.co/120x50/ffffff/1e293b?text=Code", alt: "Code"},
             content: (
                 <>
                     <p className="mb-4">
@@ -765,8 +786,6 @@ const StreamingCarousel = ({ onReadInsight }) => {
             category: "Product Design", 
             title: "Principles of User-Centric Design", 
             imageUrl: "https://placehold.co/1960x1102/059669/a7f3d0?text=Design",
-            url: "#",
-            logo: {src: "https://placehold.co/120x50/ffffff/1e293b?text=Design", alt: "Design"},
             content: (
                 <>
                     <p className="mb-4">
@@ -803,8 +822,6 @@ const StreamingCarousel = ({ onReadInsight }) => {
             category: "Cloud Computing", 
             title: "Scaling Applications with Kubernetes", 
             imageUrl: "https://placehold.co/1960x1102/0891b2/67e8f9?text=Cloud",
-            url: "#",
-            logo: {src: "https://placehold.co/120x50/ffffff/1e293b?text=Infra", alt: "Infra"},
             content: (
                  <>
                     <p className="mb-4">
@@ -855,8 +872,6 @@ const StreamingCarousel = ({ onReadInsight }) => {
             category: "Cybersecurity", 
             title: "The Zero Trust Security Model", 
             imageUrl: "https://placehold.co/1960x1102/be123c/fecdd3?text=Security",
-            url: "#",
-            logo: {src: "https://placehold.co/120x50/ffffff/1e293b?text=Security", alt: "Security"},
             content: (
                 <>
                     <p className="mb-4">
@@ -942,44 +957,55 @@ const StreamingCarousel = ({ onReadInsight }) => {
 
     return (
         <section id="insights" className="section-padding bg-transparent">
-            <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
-                <div className="text-center mb-12 md:mb-16 px-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-12 md:mb-16">
                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter text-slate-900">Insights</h2>
                      <p className="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto">Thoughts on technology and design.</p>
                 </div>
-                <div className="coverflow-container h-[55vh] md:h-[60vh]">
-                    <div 
-                        className="coverflow-track h-full"
-                        style={{ transform: `translateX(${trackTranslateX}%)` }}
-                    >
-                        {articles.map((item, index) => {
-                             const isActive = index === activeIndex;
-                            return (
-                                <div key={item.id} className={`coverflow-item ${isActive ? 'active' : ''}`}>
-                                    <div className="relative w-full h-full rounded-none md:rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
-                                        <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover"/>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
-                                        <div className="coverflow-content">
-                                            <h3 className="text-base md:text-xl font-semibold">{item.category}</h3>
-                                            <p className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tighter mt-1">{item.title}</p>
-                                            <button onClick={() => onReadInsight(item)} className="mt-4 md:mt-6 inline-block bg-white text-black font-semibold px-4 py-2 md:px-5 md:py-2.5 rounded-full text-sm md:text-base hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
-                                                Read Insight
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+
+                {/* Mobile View: Vertical List */}
+                <div className="md:hidden space-y-6">
+                    {articles.map(article => (
+                        <MobileInsightCard key={article.id} article={article} onReadInsight={onReadInsight} />
+                    ))}
                 </div>
 
-                 <div className="flex justify-center items-center gap-4 mt-8">
-                    <button onClick={handlePrev} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronLeftIcon className="w-6 h-6"/></button>
-                     {articles.map((_, index) => (
-                         <button key={index} onClick={() => setActiveIndex(index)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-slate-800 w-6' : 'bg-slate-300'}`}></button>
-                     ))}
-                    <button onClick={handleNext} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronRightIcon className="w-6 h-6"/></button>
-                 </div>
+                {/* Desktop View: Coverflow Carousel */}
+                <div className="hidden md:block">
+                    <div className="coverflow-container h-[60vh]">
+                        <div 
+                            className="coverflow-track h-full"
+                            style={{ transform: `translateX(${trackTranslateX}%)` }}
+                        >
+                            {articles.map((item, index) => {
+                                 const isActive = index === activeIndex;
+                                return (
+                                    <div key={item.id} className={`coverflow-item ${isActive ? 'active' : ''}`}>
+                                        <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-slate-900">
+                                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover"/>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/40 to-transparent pointer-events-none"></div>
+                                            <div className="coverflow-content">
+                                                <h3 className="text-xl font-semibold">{item.category}</h3>
+                                                <p className="text-5xl font-bold tracking-tighter mt-1">{item.title}</p>
+                                                <button onClick={() => onReadInsight(item)} className="mt-6 inline-block bg-white text-black font-semibold px-5 py-2.5 rounded-full text-base hover:bg-slate-200 transition-colors" style={{pointerEvents: 'auto'}}>
+                                                    Read Insight
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                     <div className="flex justify-center items-center gap-4 mt-8">
+                        <button onClick={handlePrev} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronLeftIcon className="w-6 h-6"/></button>
+                         {articles.map((_, index) => (
+                             <button key={index} onClick={() => setActiveIndex(index)} className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-slate-800 w-6' : 'bg-slate-300'}`}></button>
+                         ))}
+                        <button onClick={handleNext} className="p-2 rounded-full hover:bg-slate-100 transition-colors"><ChevronRightIcon className="w-6 h-6"/></button>
+                     </div>
+                </div>
             </div>
         </section>
     );
